@@ -1,0 +1,21 @@
+{
+  "name": "generator-create-local-addon",
+  "version": "0.0.1",
+  "description": "A generator for local add-ons.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "app",
+    "router"
+  ],
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "author": "Ethan Bütt",
+  "license": "ISC",
+  "dependencies": {
+    "yeoman-generator": "^4.10.1"
+  }
+}
