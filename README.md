@@ -5,10 +5,8 @@ A generator to assist in the development of new Local add-ons. Generates a basic
 ## Local Add-ons
 Local add-ons...
 
-<br>
 ## Getting Started
 Getting started...
 
-<br>
 ## Next Steps
 Next steps...
