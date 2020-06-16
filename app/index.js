@@ -188,7 +188,7 @@ class LocalAddonGenerator extends Generator {
             this.env.error(chalk.red('❌ ERROR: ') + 'There was a problem setting up the Local add-on directory.');
         }
 
-        this.log(chalk.red('✅ DONE: ') + 'Success! Your Local add-on directory has been created. Setting up in Local application...');
+        this.log(chalk.green('✅ DONE: ') + 'Success! Your Local add-on directory has been created. Setting up in Local application...');
     }
 
     install() {
