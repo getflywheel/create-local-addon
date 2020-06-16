@@ -160,11 +160,16 @@ class LocalAddonGenerator extends Generator {
             this.env.error(chalk.red('❌ ERROR: ') + 'There was a problem retrieving the Local add-on boilerplate archive.');
         }
 
+        const readStream = fs.createReadStream(this.workingDirectory + '/boilerplate.zip')
+            .on('error', (error) => {
+                // remove boilerplate zip archive
+                fs.unlinkSync(this.workingDirectory + '/boilerplate.zip');
+                this.env.error(chalk.red('❌ ERROR: ') + 'There was a problem locating the Local add-on boilerplate archive to be unpacked.');
+            });
+
         try {
             // unzip boilerplate archive
-            await fs.createReadStream(this.workingDirectory + '/boilerplate.zip').pipe(unzipper.Extract({ path: this.workingDirectory })).promise();//.on('error', (error) => {
-            //    this.env.error(error);
-            //});
+            await readStream.pipe(unzipper.Extract({ path: this.workingDirectory })).promise();
         } catch (error) {
             // remove boilerplate zip archive
             fs.unlinkSync(this.workingDirectory + '/boilerplate.zip');
