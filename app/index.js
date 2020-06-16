@@ -43,6 +43,10 @@ class LocalAddonGenerator extends Generator {
         return this.options.addonName ? this.options.addonName : this.configurations.addonName;
     }
 
+    __shouldEnableAddon() {
+        return !this.options.disable;
+    }
+
     // PRIVATE METHODS
 
     _getLocalDirectory(localApp) {
@@ -77,6 +81,10 @@ class LocalAddonGenerator extends Generator {
             return new Set();
         }
         return new Set(existingAddons);
+    }
+
+    _enableAddon(localApp, addonName) {
+        // ...
     }
 
     // ORDERED GENERATOR STEPS
@@ -129,6 +137,7 @@ class LocalAddonGenerator extends Generator {
     install() {
        // symlink new addon (if needed)
        // enable addon (if needed)
+       this._enableAddon(this.localApp, this.__addonName());
     }
 
     end() {
