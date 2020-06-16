@@ -1,4 +1,12 @@
+const fs = require('fs');
+const os = require('os');
+const chalk = require('chalk');
 const Generator = require('yeoman-generator');
+
+const apps = {
+    local: 'Local',
+    localBeta: 'Local Beta'
+};
 
 class LocalAddonGenerator extends Generator {
     constructor(args, opts) {
@@ -10,9 +18,16 @@ class LocalAddonGenerator extends Generator {
             desc: 'name for the new add-on'
         });
 
-        this.option('beta');  // preference to install for Local Beta
-        this.option('disable');  // don't enable new addon right away
+        this.option('beta', {
+            type: Boolean,
+            desc: 'optioanl preference to install add-on for Local Beta'
+        });
+        this.option('disable'), {
+            type: Boolean,
+            desc: 'optional preference to skip enabling add-on'
+        };
 
+        this.localApp = 'Local';
     }
 
     // CONFIGURATION ACCESSOR METHODS
@@ -23,13 +38,32 @@ class LocalAddonGenerator extends Generator {
 
     // PRIVATE METHODS
 
-    // ...
+    _confirmLocalInstallations() {
+        const homeDir = os.homedir();
+        var localInstallations = [];
+        if(fs.existsSync(homeDir + '/Library/Application Support/' + apps.local)) {
+            localInstallations.push(apps.local);
+        }
+        if(fs.existsSync(homeDir + '/Library/Application Support/' + apps.localBeta)) {
+            localInstallations.push(apps.localBeta);
+        }
+        return localInstallations;
+    }
 
     // ORDERED GENERATOR STEPS
 
     initializing() {
         // print greeting, instructions, etc
-        // check Local installations
+        const localInstallations = this._confirmLocalInstallations();
+        if(this.options.beta && localInstallations.includes(apps.localBeta)) {
+            this.localApp = apps.localBeta;
+        } else if(localInstallations.includes(apps.local)) {
+            this.localApp = apps.local;
+        } else if(localInstallations.includes(apps.localBeta)) {
+            this.localApp = apps.localBeta;
+        } else {
+            this.env.error(chalk.red('🚨 ERROR: ') + 'No installations of Local found! Please install Local at https://localwp.com to create an addon.');
+        }
         // check existing Local addons
     }
 
