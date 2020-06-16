@@ -1,6 +1,8 @@
 const fs = require('fs');
 const os = require('os');
+const http = require('http');
 const chalk = require('chalk');
+const unzipper = require('unzipper');
 const Generator = require('yeoman-generator');
 
 const platforms = {
@@ -12,6 +14,23 @@ const platforms = {
 const apps = {
     local: 'Local',
     localBeta: 'Local Beta'
+};
+
+const removeDirectory = function(path) {
+    if(!fs.existsSync(path))
+        return;
+    if(fs.lstatSync(path).isFile()) {
+        fs.unlinkSync(path);
+        return;
+    }
+    fs.readdirSync(path).forEach((member) => {
+        if(fs.lstatSync(path + '/' + member).isDirectory()) {
+            this._removeDirectory(path + '/' + member);
+        } else {
+            fs.unlinkSync(path + '/' + member);
+        }
+    });
+    fs.rmdirSync(path);
 };
 
 class LocalAddonGenerator extends Generator {
@@ -35,6 +54,9 @@ class LocalAddonGenerator extends Generator {
 
         this.localApp = 'Local';
         this.existingAddons = new Set();
+        this.addonBoilerplate = 'https://github.com/ethan309/clone-test/archive/master.zip';
+        this.addonBoilerplateArchiveName = 'clone-test-master'
+        this.workingDirectory = this.destinationRoot();
     }
 
     // CONFIGURATION ACCESSOR METHODS
@@ -57,7 +79,6 @@ class LocalAddonGenerator extends Generator {
     }
 
     _confirmLocalInstallations() {
-        const homeDir = os.homedir();
         var localInstallations = [];
         if(fs.existsSync(this._getLocalDirectory(apps.local))) {
             localInstallations.push(apps.local);
@@ -131,8 +152,38 @@ class LocalAddonGenerator extends Generator {
         }
     }
 
-    writing() {
-        // clone boilerplate, unpack, setup, etc
+    async writing() {
+        try {
+            // pull down boilerplate zip archive
+            this.spawnCommandSync('curl', ['-L', '-o', 'boilerplate.zip', this.addonBoilerplate]); // swap out with HTTP GET request for better control, error handling
+        } catch(error) {
+            this.env.error(chalk.red('❌ ERROR: ') + 'There was a problem retrieving the Local add-on boilerplate archive.');
+        }
+
+        try {
+            // unzip boilerplate archive
+            await fs.createReadStream(this.workingDirectory + '/boilerplate.zip').pipe(unzipper.Extract({ path: this.workingDirectory })).promise();//.on('error', (error) => {
+            //    this.env.error(error);
+            //});
+        } catch (error) {
+            // remove boilerplate zip archive
+            fs.unlinkSync(this.workingDirectory + '/boilerplate.zip');
+            this.env.error(chalk.red('❌ ERROR: ') + 'There was a problem unpacking the Local add-on boilerplate archive.');
+        }
+
+        // remove boilerplate zip archive
+        fs.unlinkSync(this.workingDirectory + '/boilerplate.zip');
+        
+        try {
+            // rename addon folder
+            fs.renameSync(this.workingDirectory + '/' + this.addonBoilerplateArchiveName, this.workingDirectory + '/' + this.__addonName());
+        } catch(error) {
+            // remove unpacked boilerplate archive
+            removeDirectory(this.workingDirectory + '/' + this.addonBoilerplateArchiveName);
+            this.env.error(chalk.red('❌ ERROR: ') + 'There was a problem setting up the Local add-on directory.');
+        }
+
+        this.log(chalk.red('✅ DONE: ') + 'Success! Your Local add-on directory has been created. Setting up in Local application...');
     }
 
     install() {
