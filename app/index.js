@@ -26,7 +26,7 @@ class LocalAddonGenerator extends Generator {
 
         this.option('beta', {
             type: Boolean,
-            desc: 'optioanl preference to install add-on for Local Beta'
+            desc: 'optional preference to install add-on for Local Beta'
         });
         this.option('disable'), {
             type: Boolean,
@@ -110,6 +110,16 @@ class LocalAddonGenerator extends Generator {
             ]);
         }
         // confirm name availability
+        while(this.existingAddons.has(this.__addonName())) {
+            this.configurations = await this.prompt([
+                {
+                    type: 'input',
+                    name: 'addonName',
+                    message: 'An add-on with the provided name already exists. What is the name of your addon?',
+                    default: 'my-new-local-addon'
+                }
+            ]);
+        }
     }
 
     writing() {
