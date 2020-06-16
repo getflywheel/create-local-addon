@@ -28,6 +28,7 @@ class LocalAddonGenerator extends Generator {
         };
 
         this.localApp = 'Local';
+        this.existingAddons = new Set();
     }
 
     // CONFIGURATION ACCESSOR METHODS
@@ -50,6 +51,16 @@ class LocalAddonGenerator extends Generator {
         return localInstallations;
     }
 
+    _confirmExistingLocalAddons(localApp) {
+        var existingAddons = [];
+        try {
+            existingAddons = fs.readdirSync(os.homedir() + '/Library/Application Support/' + localApp + '/addons');
+        } catch(error) {
+            this.log(chalk.red('🚨 WARNING: ') + 'There was a problem identifying your existing Local add-ons.');
+        }
+        return new Set(existingAddons);
+    }
+
     // ORDERED GENERATOR STEPS
 
     initializing() {
@@ -62,9 +73,10 @@ class LocalAddonGenerator extends Generator {
         } else if(localInstallations.includes(apps.localBeta)) {
             this.localApp = apps.localBeta;
         } else {
-            this.env.error(chalk.red('🚨 ERROR: ') + 'No installations of Local found! Please install Local at https://localwp.com to create an addon.');
+            this.env.error(chalk.red('❌ ERROR: ') + 'No installations of Local found! Please install Local at https://localwp.com to create an add-on.');
         }
-        // check existing Local addons
+        // check existing Local add-ons
+        this.existingAddons = this._confirmExistingLocalAddons(this.localApp);
     }
 
     async prompting() {
