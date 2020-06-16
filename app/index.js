@@ -119,6 +119,7 @@ class LocalAddonGenerator extends Generator {
         }
         // confirm name availability
         while(this.existingAddons.has(this.__addonName())) {
+            this.options.addonName = undefined;
             this.configurations = await this.prompt([
                 {
                     type: 'input',
