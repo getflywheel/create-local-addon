@@ -3,6 +3,12 @@ const os = require('os');
 const chalk = require('chalk');
 const Generator = require('yeoman-generator');
 
+const platforms = {
+    macOS: 'darwin',
+    windows: 'win32',
+    linux: 'linux'
+};
+
 const apps = {
     local: 'Local',
     localBeta: 'Local Beta'
@@ -39,13 +45,20 @@ class LocalAddonGenerator extends Generator {
 
     // PRIVATE METHODS
 
+    _getLocalDirectory(localApp) {
+        const platform = os.platform();
+        if(platform === platforms.macOS) {
+            return os.homedir() + '/Library/Application Support/' + localApp;
+        }
+    }
+
     _confirmLocalInstallations() {
         const homeDir = os.homedir();
         var localInstallations = [];
-        if(fs.existsSync(homeDir + '/Library/Application Support/' + apps.local)) {
+        if(fs.existsSync(this._getLocalDirectory(apps.local))) {
             localInstallations.push(apps.local);
         }
-        if(fs.existsSync(homeDir + '/Library/Application Support/' + apps.localBeta)) {
+        if(fs.existsSync(this._getLocalDirectory(apps.localBeta))) {
             localInstallations.push(apps.localBeta);
         }
         return localInstallations;
@@ -54,7 +67,7 @@ class LocalAddonGenerator extends Generator {
     _confirmExistingLocalAddons(localApp) {
         var existingAddons = [];
         try {
-            existingAddons = fs.readdirSync(os.homedir() + '/Library/Application Support/' + localApp + '/addons');
+            existingAddons = fs.readdirSync(this._getLocalDirectory(localApp) + '/addons');
         } catch(error) {
             this.log(chalk.red('🚨 WARNING: ') + 'There was a problem identifying your existing Local add-ons.');
         }
