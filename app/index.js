@@ -67,9 +67,14 @@ class LocalAddonGenerator extends Generator {
     _confirmExistingLocalAddons(localApp) {
         var existingAddons = [];
         try {
-            existingAddons = fs.readdirSync(this._getLocalDirectory(localApp) + '/addons');
+            fs.readdirSync(this._getLocalDirectory(localApp) + '/addons').forEach((addonName) => {
+                if(!addonName.startsWith('.')) {
+                    existingAddons.push(addonName);
+                }
+            });
         } catch(error) {
             this.log(chalk.red('🚨 WARNING: ') + 'There was a problem identifying your existing Local add-ons.');
+            return new Set();
         }
         return new Set(existingAddons);
     }
