@@ -5,6 +5,8 @@ const chalk = require('chalk');
 const unzipper = require('unzipper');
 const Generator = require('yeoman-generator');
 
+const { ascii } = require('./ascii.js');
+
 const platforms = {
     macOS: 'darwin',
     windows: 'win32',
@@ -119,6 +121,10 @@ class LocalAddonGenerator extends Generator {
 
     initializing() {
         // print greeting, instructions, etc
+        this.log(ascii);
+        this.log(chalk.bgGreen.white.bold('                                LOCAL ADDON CREATOR                                \n'));
+        // check existing Local installations
+        this.log('\n' + chalk.green('🔈 INFO: ') + 'Checking on your existing Local installations and add-ons...');
         const localInstallations = this._confirmLocalInstallations();
         if(this.options.beta && localInstallations.includes(apps.localBeta)) {
             this.localApp = apps.localBeta;
@@ -131,9 +137,11 @@ class LocalAddonGenerator extends Generator {
         }
         // check existing Local add-ons
         this.existingAddons = this._confirmExistingLocalAddons(this.localApp);
+        this.log('\n' + chalk.green('✅ DONE: ') + 'Everything looks good! Let\'s start making that new add-on...');
     }
 
     async prompting() {
+        this.log('\n' + chalk.green('🎤 PROMPTS: ') + 'We need a bit of information before we can create your add-on.');
         // get addon name (if needed)
         if(this.options.addonName === undefined) {
             this.configurations = await this.prompt([
@@ -160,7 +168,7 @@ class LocalAddonGenerator extends Generator {
     }
 
     async writing() {
-        this.log('\n' + chalk.green('🔈 INFO: ') + 'Pulling down the Local add-on boilerplate archive to unpack...');
+        this.log('\n' + chalk.green('🔈 INFO: ') + 'Pulling down the boilerplate Local add-on to set up...');
         // if symlink flag is not used, create add-on directly in Local add-ons directory
         if(!this.__shouldSymlinkAddon()) {
             this.destinationRoot(this._getLocalDirectory(this.localApp) + '/addons');
