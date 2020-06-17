@@ -47,16 +47,16 @@ class LocalAddonGenerator extends Generator {
 
         this.option('beta', {
             type: Boolean,
-            desc: 'optional preference to install add-on for Local Beta'
+            desc: 'install add-on for Local Beta'
         });
-        this.option('disable'), {
+        this.option('disable', {
             type: Boolean,
-            desc: 'optional preference to skip enabling add-on'
-        };
-        this.option('symlink'), {
+            desc: 'skip enabling add-on'
+        });
+        this.option('symlink', {
             type: Boolean,
-            desc: 'optional preference to create add-on directory in current directory and symlink into Local add-ons directory'
-        };
+            desc: 'create add-on directory in current directory and symlink into Local add-ons directory'
+        });
 
         this.localApp = 'Local';
         this.existingAddons = new Set();
@@ -228,6 +228,7 @@ class LocalAddonGenerator extends Generator {
         // clean up as needed
         // confirm success/failure
         this.log('\n' + chalk.green('✅ DONE: ') + 'Your ' + this.localApp + ' add-on has been created and set up successfully.');
+        this.log('\n' + chalk.yellow('🔈 INFO: ') + 'You can find the directory for your newly created add-on at ' + this.destinationRoot() + '/' + this.__addonName());
         // print next steps, links, etc
     }
 }
