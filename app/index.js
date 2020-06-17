@@ -60,20 +60,13 @@ class LocalAddonGenerator extends Generator {
 
         this.localApp = 'Local';
         this.existingAddons = new Set();
+        
         this.addonBoilerplate = 'https://github.com/ethan309/clone-test/archive/master.zip';
         this.addonBoilerplateArchiveName = 'clone-test-master';
 
         this.addonName = this.options.addonName;
-    }
-
-    // CONFIGURATION ACCESSOR METHODS
-
-    __shouldEnableAddon() {
-        return !this.options.disable;
-    }
-
-    __shouldSymlinkAddon() {
-        return this.options.symlink;
+        this.shouldEnableAddon = !this.options.disable;
+        this.shouldSymlinkAddon = this.options.symlink;
     }
 
     // PRIVATE METHODS
@@ -162,12 +155,16 @@ class LocalAddonGenerator extends Generator {
                 default: 'my-new-local-addon'
             });
         }
+
+        // Coud prompt here for:
+        //  - this.shouldEnableAddon
+        //  - this.shouldSymlinkAddon
     }
 
     async writing() {
         this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Pulling down the boilerplate Local add-on to set up...');
         // if symlink flag is not used, create add-on directly in Local add-ons directory
-        if(!this.__shouldSymlinkAddon()) {
+        if(!this.shouldSymlinkAddon) {
             this.destinationRoot(this._getLocalDirectory(this.localApp) + '/addons');
         }
 
@@ -212,11 +209,11 @@ class LocalAddonGenerator extends Generator {
     install() {
         this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Setting up your new add-on in the Local application...');
         // symlink new addon (if needed)
-        if(this.__shouldSymlinkAddon()) {
+        if(this.shouldSymlinkAddon) {
             fs.symlinkSync(this.destinationRoot() + '/' + this.addonName, this._getLocalDirectory(this.localApp) + '/addons/' + this.addonName);
         }
         // enable addon (if needed)
-        if(this.__shouldEnableAddon()) {
+        if(this.shouldEnableAddon) {
             this._enableAddon(this.localApp, this.addonName);
         }
     }
