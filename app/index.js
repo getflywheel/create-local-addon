@@ -124,7 +124,7 @@ class LocalAddonGenerator extends Generator {
         this.log(ascii);
         this.log(chalk.bgGreen.white.bold('                                LOCAL ADDON CREATOR                                \n'));
         // check existing Local installations
-        this.log('\n' + chalk.green('🔈 INFO: ') + 'Checking on your existing Local installations and add-ons...');
+        this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Checking on your existing Local installations and add-ons...');
         const localInstallations = this._confirmLocalInstallations();
         if(this.options.beta && localInstallations.includes(apps.localBeta)) {
             this.localApp = apps.localBeta;
@@ -141,7 +141,7 @@ class LocalAddonGenerator extends Generator {
     }
 
     async prompting() {
-        this.log('\n' + chalk.green('🎤 PROMPTS: ') + 'We need a bit of information before we can create your add-on.');
+        this.log('\n' + chalk.cyan('🎤 PROMPTS: ') + 'We need a bit of information before we can create your add-on.');
         // get addon name (if needed)
         if(this.options.addonName === undefined) {
             this.configurations = await this.prompt([
@@ -168,7 +168,7 @@ class LocalAddonGenerator extends Generator {
     }
 
     async writing() {
-        this.log('\n' + chalk.green('🔈 INFO: ') + 'Pulling down the boilerplate Local add-on to set up...');
+        this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Pulling down the boilerplate Local add-on to set up...');
         // if symlink flag is not used, create add-on directly in Local add-ons directory
         if(!this.__shouldSymlinkAddon()) {
             this.destinationRoot(this._getLocalDirectory(this.localApp) + '/addons');
@@ -213,7 +213,7 @@ class LocalAddonGenerator extends Generator {
     }
 
     install() {
-        this.log('\n' + chalk.green('🔈 INFO: ') + 'Setting up your new add-on in the Local application...');
+        this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Setting up your new add-on in the Local application...');
         // symlink new addon (if needed)
         if(this.__shouldSymlinkAddon()) {
             fs.symlinkSync(this.destinationRoot() + '/' + this.__addonName(), this._getLocalDirectory(this.localApp) + '/addons/' + this.__addonName());
