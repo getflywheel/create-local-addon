@@ -61,14 +61,12 @@ class LocalAddonGenerator extends Generator {
         this.localApp = 'Local';
         this.existingAddons = new Set();
         this.addonBoilerplate = 'https://github.com/ethan309/clone-test/archive/master.zip';
-        this.addonBoilerplateArchiveName = 'clone-test-master'
+        this.addonBoilerplateArchiveName = 'clone-test-master';
+
+        this.addonName = this.options.addonName;
     }
 
     // CONFIGURATION ACCESSOR METHODS
-
-    __addonName() {
-        return this.options.addonName ? this.options.addonName : this.configurations.addonName;
-    }
 
     __shouldEnableAddon() {
         return !this.options.disable;
@@ -113,6 +111,12 @@ class LocalAddonGenerator extends Generator {
         return new Set(existingAddons);
     }
 
+    async _promptUser(promptProperties) {
+        promptProperties.name = 'userResponse';
+        const response = await this.prompt(promptProperties);
+        return response.userResponse;
+    }
+
     _enableAddon(localApp, addonName) {
         // ...
     }
@@ -143,20 +147,17 @@ class LocalAddonGenerator extends Generator {
     async prompting() {
         this.log('\n' + chalk.cyan('🎤 PROMPTS: ') + 'We need a bit of information before we can create your add-on.');
         // get addon name (if needed)
-        if(this.options.addonName === undefined) {
-            this.configurations = await this.prompt({
+        if(this.addonName === undefined) {
+            this.addonName = await this._promptUser({
                 type: 'input',
-                name: 'addonName',
                 message: 'What is the name of your addon?',
                 default: 'my-new-local-addon'
             });
         }
         // confirm name availability
-        while(this.existingAddons.has(this.__addonName())) {
-            this.options.addonName = undefined;
-            this.configurations = await this.prompt({
+        while(this.existingAddons.has(this.addonName)) {
+            this.addonName = await this._promptUser({
                 type: 'input',
-                name: 'addonName',
                 message: 'An add-on with the provided name already exists. What is the name of your addon?',
                 default: 'my-new-local-addon'
             });
@@ -198,7 +199,7 @@ class LocalAddonGenerator extends Generator {
         
         try {
             // rename addon folder
-            fs.renameSync(this.destinationRoot() + '/' + this.addonBoilerplateArchiveName, this.destinationRoot() + '/' + this.__addonName());
+            fs.renameSync(this.destinationRoot() + '/' + this.addonBoilerplateArchiveName, this.destinationRoot() + '/' + this.addonName);
         } catch(error) {
             // remove unpacked boilerplate archive
             removeDirectory(this.destinationRoot() + '/' + this.addonBoilerplateArchiveName);
@@ -212,11 +213,11 @@ class LocalAddonGenerator extends Generator {
         this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Setting up your new add-on in the Local application...');
         // symlink new addon (if needed)
         if(this.__shouldSymlinkAddon()) {
-            fs.symlinkSync(this.destinationRoot() + '/' + this.__addonName(), this._getLocalDirectory(this.localApp) + '/addons/' + this.__addonName());
+            fs.symlinkSync(this.destinationRoot() + '/' + this.addonName, this._getLocalDirectory(this.localApp) + '/addons/' + this.addonName);
         }
         // enable addon (if needed)
         if(this.__shouldEnableAddon()) {
-            this._enableAddon(this.localApp, this.__addonName());
+            this._enableAddon(this.localApp, this.addonName);
         }
     }
 
@@ -224,7 +225,7 @@ class LocalAddonGenerator extends Generator {
         // clean up as needed
         // confirm success/failure
         this.log('\n' + chalk.green('✅ DONE: ') + 'Your ' + this.localApp + ' add-on has been created and set up successfully.');
-        this.log('\n' + chalk.yellow('🔈 INFO: ') + 'You can find the directory for your newly created add-on at ' + this.destinationRoot() + '/' + this.__addonName());
+        this.log('\n' + chalk.yellow('🔈 INFO: ') + 'You can find the directory for your newly created add-on at ' + this.destinationRoot() + '/' + this.addonName);
         // print next steps, links, etc
     }
 }
