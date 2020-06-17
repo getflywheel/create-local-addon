@@ -178,7 +178,7 @@ class LocalAddonGenerator extends Generator {
         const readStream = fs.createReadStream(this.destinationRoot() + '/boilerplate.zip')
             .on('error', (error) => {
                 // remove boilerplate zip archive
-                fs.unlinkSync(this.workingDirectory + '/boilerplate.zip');
+                fs.unlinkSync(this.destinationRoot() + '/boilerplate.zip');
                 this.env.error('\n' + chalk.red('❌ ERROR: ') + 'There was a problem locating the Local add-on boilerplate archive to be unpacked.');
             });
 
