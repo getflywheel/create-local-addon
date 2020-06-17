@@ -144,26 +144,22 @@ class LocalAddonGenerator extends Generator {
         this.log('\n' + chalk.cyan('🎤 PROMPTS: ') + 'We need a bit of information before we can create your add-on.');
         // get addon name (if needed)
         if(this.options.addonName === undefined) {
-            this.configurations = await this.prompt([
-                {
-                    type: 'input',
-                    name: 'addonName',
-                    message: 'What is the name of your addon?',
-                    default: 'my-new-local-addon'
-                }
-            ]);
+            this.configurations = await this.prompt({
+                type: 'input',
+                name: 'addonName',
+                message: 'What is the name of your addon?',
+                default: 'my-new-local-addon'
+            });
         }
         // confirm name availability
         while(this.existingAddons.has(this.__addonName())) {
             this.options.addonName = undefined;
-            this.configurations = await this.prompt([
-                {
-                    type: 'input',
-                    name: 'addonName',
-                    message: 'An add-on with the provided name already exists. What is the name of your addon?',
-                    default: 'my-new-local-addon'
-                }
-            ]);
+            this.configurations = await this.prompt({
+                type: 'input',
+                name: 'addonName',
+                message: 'An add-on with the provided name already exists. What is the name of your addon?',
+                default: 'my-new-local-addon'
+            });
         }
     }
 
