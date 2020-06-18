@@ -90,12 +90,12 @@ class LocalAddonGenerator extends Generator {
     }
 
     _confirmLocalInstallations() {
-        var localInstallations = [];
+        var localInstallations = new Set();
         if(fs.existsSync(this._getLocalDirectory(apps.local))) {
-            localInstallations.push(apps.local);
+            localInstallations.add(apps.local);
         }
         if(fs.existsSync(this._getLocalDirectory(apps.localBeta))) {
-            localInstallations.push(apps.localBeta);
+            localInstallations.add(apps.localBeta);
         }
         return localInstallations;
     }
@@ -134,11 +134,11 @@ class LocalAddonGenerator extends Generator {
         // check existing Local installations
         this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Checking on your existing Local installations and add-ons...');
         const localInstallations = this._confirmLocalInstallations();
-        if(this.preferLocalBeta && localInstallations.includes(apps.localBeta)) {
+        if(this.preferLocalBeta && localInstallations.has(apps.localBeta)) {
             this.localApp = apps.localBeta;
-        } else if(localInstallations.includes(apps.local)) {
+        } else if(localInstallations.has(apps.local)) {
             this.localApp = apps.local;
-        } else if(localInstallations.includes(apps.localBeta)) {
+        } else if(localInstallations.has(apps.localBeta)) {
             this.localApp = apps.localBeta;
         } else {
             this.env.error('\n' + chalk.red('❌ ERROR: ') + 'No installations of Local found! Please install Local at https://localwp.com to create an add-on.');
