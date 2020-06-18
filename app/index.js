@@ -170,7 +170,7 @@ class LocalAddonGenerator extends Generator {
     async writing() {
         this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Pulling down the boilerplate Local add-on to set up...');
         // if symlink flag is not used, create add-on directly in Local add-ons directory
-        if(!this.shouldPlaceAddonDirectly) {
+        if(this.shouldPlaceAddonDirectly) {
             this.destinationRoot(this._getLocalDirectory(this.localApp) + '/addons');
         }
 
@@ -220,6 +220,7 @@ class LocalAddonGenerator extends Generator {
         }
         // enable addon (if needed)
         if(this.shouldEnableAddon) {
+            this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Enabling your add-on...');
             this._enableAddon(this.localApp, this.addonName);
         }
     }
