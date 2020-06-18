@@ -74,9 +74,10 @@ class LocalAddonGenerator extends Generator {
 
         this.addonName = this.options['name'];
 
+        this.preferLocalBeta = this.options['beta'];
         this.shouldPlaceAddonDirectly = this.options['place-directly'];
         this.shouldSymlinkAddon = !this.options['do-not-symlink'] && !this.shouldPlaceAddonDirectly;
-        this.shouldEnableAddon = !this.options.disable && (this.shouldPlaceAddonDirectly || this.shouldSymlinkAddon);
+        this.shouldEnableAddon = !this.options['disable'] && (this.shouldPlaceAddonDirectly || this.shouldSymlinkAddon);
     }
 
     // PRIVATE METHODS
@@ -133,7 +134,7 @@ class LocalAddonGenerator extends Generator {
         // check existing Local installations
         this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Checking on your existing Local installations and add-ons...');
         const localInstallations = this._confirmLocalInstallations();
-        if(this.options.beta && localInstallations.includes(apps.localBeta)) {
+        if(this.preferLocalBeta && localInstallations.includes(apps.localBeta)) {
             this.localApp = apps.localBeta;
         } else if(localInstallations.includes(apps.local)) {
             this.localApp = apps.local;
