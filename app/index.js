@@ -47,15 +47,19 @@ class LocalAddonGenerator extends Generator {
 
         this.option('beta', {
             type: Boolean,
-            desc: 'install add-on for Local Beta'
+            desc: 'preference to install add-on for Local Beta'
+        });
+        this.option('place-directly', {
+            type: Boolean,
+            desc: 'place add-on directory directly into Local add-ons directory'
+        });
+        this.option('do-not-symlink', {
+            type: Boolean,
+            desc: 'do not symlink add-on directory into Local add-ons directory'
         });
         this.option('disable', {
             type: Boolean,
             desc: 'skip enabling add-on'
-        });
-        this.option('symlink', {
-            type: Boolean,
-            desc: 'create add-on directory in current directory and symlink into Local add-ons directory'
         });
 
         this.localApp = 'Local';
@@ -65,8 +69,10 @@ class LocalAddonGenerator extends Generator {
         this.addonBoilerplateArchiveName = 'clone-test-master';
 
         this.addonName = this.options.addonName;
-        this.shouldEnableAddon = !this.options.disable;
-        this.shouldSymlinkAddon = this.options.symlink;
+
+        this.shouldPlaceAddonDirectly = this.options['place-directly'];
+        this.shouldSymlinkAddon = !this.options['do-not-symlink'] && !this.shouldPlaceAddonDirectly;
+        this.shouldEnableAddon = !this.options.disable && (this.shouldPlaceAddonDirectly || this.shouldSymlinkAddon);
     }
 
     // PRIVATE METHODS
@@ -164,7 +170,7 @@ class LocalAddonGenerator extends Generator {
     async writing() {
         this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Pulling down the boilerplate Local add-on to set up...');
         // if symlink flag is not used, create add-on directly in Local add-ons directory
-        if(!this.shouldSymlinkAddon) {
+        if(!this.shouldPlaceAddonDirectly) {
             this.destinationRoot(this._getLocalDirectory(this.localApp) + '/addons');
         }
 
