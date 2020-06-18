@@ -39,27 +39,31 @@ class LocalAddonGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
-        this.argument('addonName', {
+        this.argument('name', {
             required: false,
             type: String,
-            desc: 'name for the new add-on'
+            desc: 'Name for the new add-on'
         });
 
         this.option('beta', {
             type: Boolean,
-            desc: 'preference to install add-on for Local Beta'
+            desc: 'Preference to install add-on for Local Beta',
+            default: false
         });
         this.option('place-directly', {
             type: Boolean,
-            desc: 'place add-on directory directly into Local add-ons directory'
+            desc: 'Place add-on directory directly into Local add-ons directory (automatically adds --do-not-symlink)',
+            default: false
         });
         this.option('do-not-symlink', {
             type: Boolean,
-            desc: 'do not symlink add-on directory into Local add-ons directory'
+            desc: 'Skip creating a symbolic link in Local add-ons directory to your add-on directory',
+            default: false
         });
         this.option('disable', {
             type: Boolean,
-            desc: 'skip enabling add-on'
+            desc: 'Skip enabling add-on',
+            default: false
         });
 
         this.localApp = 'Local';
@@ -68,7 +72,7 @@ class LocalAddonGenerator extends Generator {
         this.addonBoilerplate = 'https://github.com/ethan309/clone-test/archive/master.zip';
         this.addonBoilerplateArchiveName = 'clone-test-master';
 
-        this.addonName = this.options.addonName;
+        this.addonName = this.options['name'];
 
         this.shouldPlaceAddonDirectly = this.options['place-directly'];
         this.shouldSymlinkAddon = !this.options['do-not-symlink'] && !this.shouldPlaceAddonDirectly;
