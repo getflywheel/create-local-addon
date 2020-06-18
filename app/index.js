@@ -5,35 +5,8 @@ const chalk = require('chalk');
 const unzipper = require('unzipper');
 const Generator = require('yeoman-generator');
 
+const { platforms, apps, removeDirectory, getLocalDirectory, confirmLocalInstallations, confirmExistingLocalAddons, enableAddon } = require('./utils');
 const { ascii } = require('./ascii.js');
-
-const platforms = {
-    macOS: 'darwin',
-    windows: 'win32',
-    linux: 'linux'
-};
-
-const apps = {
-    local: 'Local',
-    localBeta: 'Local Beta'
-};
-
-const removeDirectory = function(path) {
-    if(!fs.existsSync(path))
-        return;
-    if(fs.lstatSync(path).isFile()) {
-        fs.unlinkSync(path);
-        return;
-    }
-    fs.readdirSync(path).forEach((member) => {
-        if(fs.lstatSync(path + '/' + member).isDirectory()) {
-            this._removeDirectory(path + '/' + member);
-        } else {
-            fs.unlinkSync(path + '/' + member);
-        }
-    });
-    fs.rmdirSync(path);
-};
 
 class LocalAddonGenerator extends Generator {
     constructor(args, opts) {
@@ -82,47 +55,10 @@ class LocalAddonGenerator extends Generator {
 
     // PRIVATE METHODS
 
-    _getLocalDirectory(localApp) {
-        const platform = os.platform();
-        if(platform === platforms.macOS) {
-            return os.homedir() + '/Library/Application Support/' + localApp;
-        }
-    }
-
-    _confirmLocalInstallations() {
-        var localInstallations = new Set();
-        if(fs.existsSync(this._getLocalDirectory(apps.local))) {
-            localInstallations.add(apps.local);
-        }
-        if(fs.existsSync(this._getLocalDirectory(apps.localBeta))) {
-            localInstallations.add(apps.localBeta);
-        }
-        return localInstallations;
-    }
-
-    _confirmExistingLocalAddons(localApp) {
-        var existingAddons = [];
-        try {
-            fs.readdirSync(this._getLocalDirectory(localApp) + '/addons').forEach((addonName) => {
-                if(!addonName.startsWith('.')) {
-                    existingAddons.push(addonName);
-                }
-            });
-        } catch(error) {
-            this.log('\n' + chalk.red('🚨 WARNING: ') + 'There was a problem identifying your existing Local add-ons.');
-            return new Set();
-        }
-        return new Set(existingAddons);
-    }
-
     async _promptUser(promptProperties) {
         promptProperties.name = 'userResponse';
         const response = await this.prompt(promptProperties);
         return response.userResponse;
-    }
-
-    _enableAddon(localApp, addonName) {
-        // ...
     }
 
     // ORDERED GENERATOR STEPS
@@ -133,7 +69,7 @@ class LocalAddonGenerator extends Generator {
         this.log(chalk.bgGreen.white.bold('                                LOCAL ADDON CREATOR                                \n'));
         // check existing Local installations
         this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Checking on your existing Local installations and add-ons...');
-        const localInstallations = this._confirmLocalInstallations();
+        const localInstallations = confirmLocalInstallations();
         if(this.preferLocalBeta && localInstallations.has(apps.localBeta)) {
             this.localApp = apps.localBeta;
         } else if(localInstallations.has(apps.local)) {
@@ -144,7 +80,12 @@ class LocalAddonGenerator extends Generator {
             this.env.error('\n' + chalk.red('❌ ERROR: ') + 'No installations of Local found! Please install Local at https://localwp.com to create an add-on.');
         }
         // check existing Local add-ons
-        this.existingAddons = this._confirmExistingLocalAddons(this.localApp);
+        try {
+            this.existingAddons = confirmExistingLocalAddons(this.localApp);
+        } catch(error) {
+            this.log('\n' + chalk.red('🚨 WARNING: ') + 'There was a problem identifying your existing Local add-ons.');
+            this.existingAddons = new Set();
+        }
         this.log('\n' + chalk.green('✅ DONE: ') + 'Everything looks good! Let\'s start making that new add-on...');
     }
 
@@ -176,7 +117,7 @@ class LocalAddonGenerator extends Generator {
         this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Pulling down the boilerplate Local add-on to set up...');
         // if symlink flag is not used, create add-on directly in Local add-ons directory
         if(this.shouldPlaceAddonDirectly) {
-            this.destinationRoot(this._getLocalDirectory(this.localApp) + '/addons');
+            this.destinationRoot(getLocalDirectory(this.localApp) + '/addons');
         }
 
         try {
@@ -221,12 +162,12 @@ class LocalAddonGenerator extends Generator {
         this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Setting up your new add-on in the Local application...');
         // symlink new addon (if needed)
         if(this.shouldSymlinkAddon) {
-            fs.symlinkSync(this.destinationRoot() + '/' + this.addonName, this._getLocalDirectory(this.localApp) + '/addons/' + this.addonName);
+            fs.symlinkSync(this.destinationRoot() + '/' + this.addonName, getLocalDirectory(this.localApp) + '/addons/' + this.addonName);
         }
         // enable addon (if needed)
         if(this.shouldEnableAddon) {
             this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Enabling your add-on...');
-            this._enableAddon(this.localApp, this.addonName);
+            enableAddon(this.localApp, this.addonName);
         }
     }
 
