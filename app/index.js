@@ -169,7 +169,7 @@ class LocalAddonGenerator extends Generator {
         }
 
         try {
-            // pull down boilerplate zip archive
+            // pull down and unpack boilerplate zip archive
             const boilerplate = await fetch(this.addonBoilerplate);
             await boilerplate.body.pipe(unzipper.Extract({ path: this.destinationRoot() })).promise();
         } catch(error) {
@@ -180,7 +180,6 @@ class LocalAddonGenerator extends Generator {
             // rename addon folder
             fs.renameSync(this.destinationRoot() + '/' + this.addonBoilerplateArchiveName, this.destinationRoot() + '/' + this.addonDirectoryName);
         } catch(error) {
-            this.log(error);
             // remove unpacked boilerplate archive
             removeDirectory(this.destinationRoot() + '/' + this.addonBoilerplateArchiveName);
             this._error('There was a problem setting up the Local add-on directory.');
@@ -199,7 +198,7 @@ class LocalAddonGenerator extends Generator {
 
     install() {
         this._info('Setting up your new add-on in the Local application...');
-        
+
         // symlink new addon (if needed)
         if(this.shouldSymlinkAddon) {
             fs.symlinkSync(this.destinationRoot() + '/' + this.addonDirectoryName, getLocalDirectory(this.localApp) + '/addons/' + this.addonDirectoryName);
