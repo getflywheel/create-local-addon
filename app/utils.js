@@ -1,4 +1,5 @@
-const fs = require('fs');
+const fs = require('fs-extra');
+const jetpack = require('fs-jetpack');
 const os = require('os');
 
 const platforms = {
@@ -48,10 +49,12 @@ const confirmLocalInstallations = function() {
 };
 
 const confirmExistingLocalAddons = function(localApp) {
-    var existingAddons = new Set();
-    fs.readdirSync(getLocalDirectory(localApp) + '/addons').forEach((addonName) => {
-        if(!addonName.startsWith('.')) {
-            existingAddons.add(addonName);
+    var existingAddons = new Map();
+    fs.readdirSync(getLocalDirectory(localApp) + '/addons').forEach((addonDirectory) => {
+        if(!addonDirectory.startsWith('.')) {
+            const packageJSON = jetpack.read(getLocalDirectory(localApp) + '/addons/' + addonDirectory + '/package.json', 'json');
+            const addonName = packageJSON.productName;
+            existingAddons.set(addonName, addonDirectory);
         }
     });
     return existingAddons;

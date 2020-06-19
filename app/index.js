@@ -15,13 +15,13 @@ class LocalAddonGenerator extends Generator {
         this.argument('name', {
             required: false,
             type: String,
-            desc: 'Internal name for the new add-on'
+            desc: 'Directory/internal name for the new add-on'
         });
-        // this.argument('productname', {
-        //     required: false,
-        //     type: String,
-        //     desc: 'Display name for the new add-on'
-        // });
+        this.argument('productname', {
+            required: false,
+            type: String,
+            desc: 'Product/display name for the new add-on'
+        });
 
         this.option('beta', {
             type: Boolean,
@@ -45,13 +45,13 @@ class LocalAddonGenerator extends Generator {
         });
 
         this.localApp = 'Local';
-        this.existingAddons = new Set();
+        this.existingAddons = new Map();
         
         this.addonBoilerplate = 'https://github.com/ethan309/clone-test/archive/master.zip';
         this.addonBoilerplateArchiveName = 'clone-test-master';
 
-        this.addonName = this.options['name'];
-        //this.addonName = this.options['productname'];
+        this.addonProductName = this.options['productname'];
+        this.addonDirectoryName = this.options['name'];
 
         this.preferLocalBeta = this.options['beta'];
         this.shouldPlaceAddonDirectly = this.options['place-directly'];
@@ -113,24 +113,41 @@ class LocalAddonGenerator extends Generator {
 
     async prompting() {
         this.log('\n' + chalk.cyan('🎤 PROMPTS: ') + 'We need a bit of information before we can create your add-on.');
-        // get addon name (if needed)
-        if(this.addonName === undefined) {
-            this.addonName = await this._promptUser({
+        // get addon product name (if needed)
+        if(this.addonProductName === undefined) {
+            this.addonProductName = await this._promptUser({
                 type: 'input',
                 message: 'What is the name of your addon?',
                 default: 'my-new-local-addon'
             });
         }
-        // confirm name availability
-        while(this.existingAddons.has(this.addonName)) {
-            this.addonName = await this._promptUser({
+        // confirm product name availability
+        while(this.existingAddons.has(this.addonProductName)) {
+            this.addonProductName = await this._promptUser({
                 type: 'input',
                 message: 'An add-on with the provided name already exists. What is the name of your addon?',
                 default: 'my-new-local-addon'
             });
         }
 
-        // Coud prompt here for:
+        // get addon directory name (if needed)
+        if(this.addonDirectoryName === undefined) {
+            this.addonDirectoryName = await this._promptUser({
+                type: 'input',
+                message: 'We would like to make a directory for your add-on. What would you like to name this directory?',
+                default: this.addonProductName.toLowerCase().replace(/\s+/g, '-')
+            });
+        }
+        // confirm directory name availability
+        while(Array.from(this.existingAddons.values()).includes(this.addonDirectoryName)) {
+            this.addonDirectoryName = await this._promptUser({
+                type: 'input',
+                message: 'An add-on with the provided direectory name already exists. What is the name of your addon?',
+                default: this.addonProductName.toLowerCase().replace(/\s+/g, '-')
+            });
+        }
+
+        // Could prompt here for:
         //  - this.shouldEnableAddon
         //  - this.shouldSymlinkAddon
     }
@@ -152,7 +169,7 @@ class LocalAddonGenerator extends Generator {
         
         try {
             // rename addon folder
-            fs.renameSync(this.destinationRoot() + '/' + this.addonBoilerplateArchiveName, this.destinationRoot() + '/' + this.addonName);
+            fs.renameSync(this.destinationRoot() + '/' + this.addonBoilerplateArchiveName, this.destinationRoot() + '/' + this.addonDirectoryName);
         } catch(error) {
             // remove unpacked boilerplate archive
             removeDirectory(this.destinationRoot() + '/' + this.addonBoilerplateArchiveName);
@@ -166,12 +183,12 @@ class LocalAddonGenerator extends Generator {
         this._info('Setting up your new add-on in the Local application...');
         // symlink new addon (if needed)
         if(this.shouldSymlinkAddon) {
-            fs.symlinkSync(this.destinationRoot() + '/' + this.addonName, getLocalDirectory(this.localApp) + '/addons/' + this.addonName);
+            fs.symlinkSync(this.destinationRoot() + '/' + this.addonDirectoryName, getLocalDirectory(this.localApp) + '/addons/' + this.addonDirectoryName);
         }
         // enable addon (if needed)
         if(this.shouldEnableAddon) {
             this._info('Enabling your add-on...');
-            enableAddon(this.localApp, this.addonName);
+            enableAddon(this.localApp, this.addonDirectoryName);
         }
     }
 
@@ -179,7 +196,7 @@ class LocalAddonGenerator extends Generator {
         // clean up as needed
         // confirm success/failure
         this._completion('Your ' + this.localApp + ' add-on has been created and set up successfully.');
-        this._info('You can find the directory for your newly created add-on at ' + this.destinationRoot() + '/' + this.addonName);
+        this._info('You can find the directory for your newly created add-on at ' + this.destinationRoot() + '/' + this.addonDirectoryName);
         // print next steps, links, etc
     }
 }
