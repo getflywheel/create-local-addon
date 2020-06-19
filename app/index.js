@@ -5,7 +5,7 @@ const chalk = require('chalk');
 const unzipper = require('unzipper');
 const Generator = require('yeoman-generator');
 
-const { platforms, apps, removeDirectory, getLocalDirectory, confirmLocalInstallations, confirmExistingLocalAddons, enableAddon } = require('./utils');
+const { platforms, apps, removeDirectory, getLocalDirectory, confirmLocalInstallations, confirmExistingLocalAddons, confirmExistingLocalAddonDirectories, confirmExistingLocalAddonNames, enableAddon } = require('./utils');
 const { ascii } = require('./ascii.js');
 
 class LocalAddonGenerator extends Generator {
@@ -45,7 +45,8 @@ class LocalAddonGenerator extends Generator {
         });
 
         this.localApp = 'Local';
-        this.existingAddons = new Map();
+        this.existingAddonNames = new Set();
+        this.existingAddonDirectories = new Set();
         
         this.addonBoilerplate = 'https://github.com/ethan309/clone-test/archive/master.zip';
         this.addonBoilerplateArchiveName = 'clone-test-master';
@@ -107,10 +108,12 @@ class LocalAddonGenerator extends Generator {
 
         // check existing Local add-ons
         try {
-            this.existingAddons = confirmExistingLocalAddons(this.localApp);
+            this.existingAddonNames = confirmExistingLocalAddonNames(this.localApp);
+            this.existingAddonDirectories = confirmExistingLocalAddonDirectories(this.localApp);
         } catch(error) {
             this._warn('There was a problem identifying your existing Local add-ons.');
-            this.existingAddons = new Set();
+            this.existingAddonNames = new Set();
+            this.existingAddonDirectories = new Set();
         }
 
         this._completion('Everything looks good! Let\'s start making that new add-on...');
@@ -139,10 +142,10 @@ class LocalAddonGenerator extends Generator {
             });
         }
         // confirm directory name availability
-        while(Array.from(this.existingAddons.values()).includes(this.addonDirectoryName)) {
+        while(Array.from(this.existingAddonNames.values()).includes(this.addonDirectoryName) || Array.from(this.existingAddonDirectories.values()).includes(this.addonDirectoryName)) {
             this.addonDirectoryName = await this._promptUser({
                 type: 'input',
-                message: 'An add-on with the provided directory name already exists. What is the name of your addon?',
+                message: 'An add-on with the name or directory ' + this.addonDirectoryName + ' already exists. Please choose another.',
                 default: this.addonProductName.toLowerCase().replace(/\s+/g, '-')
             });
         }

@@ -54,11 +54,28 @@ const confirmExistingLocalAddons = function(localApp) {
         if(!addonDirectory.startsWith('.')) {
             const package = getLocalDirectory(localApp) + '/addons/' + addonDirectory + '/package.json';
             const packageJSON = jetpack.read(package, 'json');
-            const addonName = packageJSON['productName'];
-            existingAddons.set(addonName, addonDirectory);
+            const addonProductName = packageJSON['productName'];
+            existingAddons.set(addonProductName, addonDirectory);
         }
     });
     return existingAddons;
+};
+
+const confirmExistingLocalAddonDirectories = function(localApp) {
+    var existingAddonDirectories = new Set();
+    fs.readdirSync(getLocalDirectory(localApp) + '/addons').forEach((addonDirectory) => existingAddonDirectories.add(addonDirectory));
+    return existingAddonDirectories;
+};
+
+const confirmExistingLocalAddonNames = function(localApp) {
+    var existingAddonNames = new Set();
+    fs.readdirSync(getLocalDirectory(localApp) + '/addons').forEach((addonDirectory) => {
+        const package = getLocalDirectory(localApp) + '/addons/' + addonDirectory + '/package.json';
+        const packageJSON = jetpack.read(package, 'json');
+        const addonName = packageJSON['productName'];
+        existingAddonNames.add(addonName);
+    });
+    return existingAddonNames;
 };
 
 const enableAddon = function(localApp, addonName) {
@@ -72,5 +89,7 @@ module.exports = {
     getLocalDirectory,
     confirmLocalInstallations,
     confirmExistingLocalAddons,
+    confirmExistingLocalAddonDirectories,
+    confirmExistingLocalAddonNames,
     enableAddon
 };
