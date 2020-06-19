@@ -1,6 +1,6 @@
 const fs = require('fs');
 const os = require('os');
-const http = require('http');
+const fetch = require('node-fetch');
 const chalk = require('chalk');
 const unzipper = require('unzipper');
 const Generator = require('yeoman-generator');
@@ -17,11 +17,11 @@ class LocalAddonGenerator extends Generator {
             type: String,
             desc: 'Internal name for the new add-on'
         });
-        this.argument('productname', {
-            required: false,
-            type: String,
-            desc: 'Display name for the new add-on'
-        });
+        // this.argument('productname', {
+        //     required: false,
+        //     type: String,
+        //     desc: 'Display name for the new add-on'
+        // });
 
         this.option('beta', {
             type: Boolean,
@@ -51,7 +51,7 @@ class LocalAddonGenerator extends Generator {
         this.addonBoilerplateArchiveName = 'clone-test-master';
 
         this.addonName = this.options['name'];
-        this.addonName = this.options['productname'];
+        //this.addonName = this.options['productname'];
 
         this.preferLocalBeta = this.options['beta'];
         this.shouldPlaceAddonDirectly = this.options['place-directly'];
@@ -142,9 +142,13 @@ class LocalAddonGenerator extends Generator {
             this.destinationRoot(getLocalDirectory(this.localApp) + '/addons');
         }
 
+        const archive = fs.createWriteStream('./boilerplate.zip');
+
         try {
             // pull down boilerplate zip archive
-            this.spawnCommandSync('curl', ['-L', '-o', 'boilerplate.zip', this.addonBoilerplate]); // swap out with HTTP GET request for better control, error handling
+            const response = await fetch(this.addonBoilerplate);
+            response.body.pipe(archive);
+            
         } catch(error) {
             this._error('There was a problem retrieving the Local add-on boilerplate archive.');
         }
