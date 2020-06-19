@@ -1,5 +1,4 @@
 const fs = require('fs-extra');
-const os = require('os');
 const fetch = require('node-fetch');
 const jetpack = require('fs-jetpack');
 const chalk = require('chalk');
@@ -13,15 +12,15 @@ class LocalAddonGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
-        this.argument('name', {
-            required: false,
-            type: String,
-            desc: 'Directory/internal name for the new add-on'
-        });
         this.argument('productname', {
             required: false,
             type: String,
             desc: 'Product/display name for the new add-on'
+        });
+        this.argument('directoryname', {
+            required: false,
+            type: String,
+            desc: 'Directory/internal name for the new add-on'
         });
 
         this.option('beta', {
@@ -52,7 +51,7 @@ class LocalAddonGenerator extends Generator {
         this.addonBoilerplateArchiveName = 'clone-test-master';
 
         this.addonProductName = this.options['productname'];
-        this.addonDirectoryName = this.options['name'];
+        this.addonDirectoryName = this.options['directoryname'];
 
         this.preferLocalBeta = this.options['beta'];
         this.shouldPlaceAddonDirectly = this.options['place-directly'];
@@ -114,7 +113,9 @@ class LocalAddonGenerator extends Generator {
     }
 
     async prompting() {
-        this.log('\n' + chalk.cyan('🎤 PROMPTS: ') + 'We need a bit of information before we can create your add-on.');
+        if(this.addonProductName === undefined || this.addonDirectoryName === undefined) {
+            this.log('\n' + chalk.cyan('🎤 PROMPTS: ') + 'We need a bit of information before we can create your add-on.');
+        }
         // get addon product name (if needed)
         if(this.addonProductName === undefined) {
             this.addonProductName = await this._promptUser({
@@ -144,7 +145,7 @@ class LocalAddonGenerator extends Generator {
         while(Array.from(this.existingAddons.values()).includes(this.addonDirectoryName)) {
             this.addonDirectoryName = await this._promptUser({
                 type: 'input',
-                message: 'An add-on with the provided direectory name already exists. What is the name of your addon?',
+                message: 'An add-on with the provided directory name already exists. What is the name of your addon?',
                 default: this.addonProductName.toLowerCase().replace(/\s+/g, '-')
             });
         }
