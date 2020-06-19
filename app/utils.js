@@ -52,8 +52,9 @@ const confirmExistingLocalAddons = function(localApp) {
     var existingAddons = new Map();
     fs.readdirSync(getLocalDirectory(localApp) + '/addons').forEach((addonDirectory) => {
         if(!addonDirectory.startsWith('.')) {
-            const packageJSON = jetpack.read(getLocalDirectory(localApp) + '/addons/' + addonDirectory + '/package.json', 'json');
-            const addonName = packageJSON.productName;
+            const package = getLocalDirectory(localApp) + '/addons/' + addonDirectory + '/package.json';
+            const packageJSON = jetpack.read(package, 'json');
+            const addonName = packageJSON['productName'];
             existingAddons.set(addonName, addonDirectory);
         }
     });

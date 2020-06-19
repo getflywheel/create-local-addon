@@ -129,14 +129,6 @@ class LocalAddonGenerator extends Generator {
                 default: 'My New Local Addon'
             });
         }
-        // confirm product name availability
-        while(this.existingAddons.has(this.addonProductName)) {
-            this.addonProductName = await this._promptUser({
-                type: 'input',
-                message: 'An add-on with the provided name already exists. What is the name of your addon?',
-                default: 'My New Local Addon'
-            });
-        }
 
         // get addon directory name (if needed)
         if(this.addonDirectoryName === undefined) {
