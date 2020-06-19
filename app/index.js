@@ -15,7 +15,12 @@ class LocalAddonGenerator extends Generator {
         this.argument('name', {
             required: false,
             type: String,
-            desc: 'Name for the new add-on'
+            desc: 'Internal name for the new add-on'
+        });
+        this.argument('productname', {
+            required: false,
+            type: String,
+            desc: 'Display name for the new add-on'
         });
 
         this.option('beta', {
@@ -46,6 +51,7 @@ class LocalAddonGenerator extends Generator {
         this.addonBoilerplateArchiveName = 'clone-test-master';
 
         this.addonName = this.options['name'];
+        this.addonName = this.options['productname'];
 
         this.preferLocalBeta = this.options['beta'];
         this.shouldPlaceAddonDirectly = this.options['place-directly'];
@@ -59,6 +65,22 @@ class LocalAddonGenerator extends Generator {
         promptProperties.name = 'userResponse';
         const response = await this.prompt(promptProperties);
         return response.userResponse;
+    }
+
+    _info(message) {
+        this.log('\n' + chalk.yellow('🔈 INFO: ') + message);
+    }
+
+    _completion(message) {
+        this.log('\n' + chalk.green('✅ DONE: ') + message);
+    }
+
+    _warn(message) {
+        this.log('\n' + chalk.red('🚨 WARNING: ') + message);
+    }
+
+    _error(message) {
+        this.env.error('\n' + chalk.red('❌ ERROR: ') + message);
     }
 
     // ORDERED GENERATOR STEPS
@@ -77,16 +99,16 @@ class LocalAddonGenerator extends Generator {
         } else if(localInstallations.has(apps.localBeta)) {
             this.localApp = apps.localBeta;
         } else {
-            this.env.error('\n' + chalk.red('❌ ERROR: ') + 'No installations of Local found! Please install Local at https://localwp.com to create an add-on.');
+            this._error('No installations of Local found! Please install Local at https://localwp.com to create an add-on.');
         }
         // check existing Local add-ons
         try {
             this.existingAddons = confirmExistingLocalAddons(this.localApp);
         } catch(error) {
-            this.log('\n' + chalk.red('🚨 WARNING: ') + 'There was a problem identifying your existing Local add-ons.');
+            this._warn('There was a problem identifying your existing Local add-ons.');
             this.existingAddons = new Set();
         }
-        this.log('\n' + chalk.green('✅ DONE: ') + 'Everything looks good! Let\'s start making that new add-on...');
+        this._completion('Everything looks good! Let\'s start making that new add-on...');
     }
 
     async prompting() {
@@ -114,7 +136,7 @@ class LocalAddonGenerator extends Generator {
     }
 
     async writing() {
-        this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Pulling down the boilerplate Local add-on to set up...');
+        this._info('Pulling down the boilerplate Local add-on to set up...');
         // if symlink flag is not used, create add-on directly in Local add-ons directory
         if(this.shouldPlaceAddonDirectly) {
             this.destinationRoot(getLocalDirectory(this.localApp) + '/addons');
@@ -124,14 +146,14 @@ class LocalAddonGenerator extends Generator {
             // pull down boilerplate zip archive
             this.spawnCommandSync('curl', ['-L', '-o', 'boilerplate.zip', this.addonBoilerplate]); // swap out with HTTP GET request for better control, error handling
         } catch(error) {
-            this.env.error('\n' + chalk.red('❌ ERROR: ') + 'There was a problem retrieving the Local add-on boilerplate archive.');
+            this._error('There was a problem retrieving the Local add-on boilerplate archive.');
         }
 
         const readStream = fs.createReadStream(this.destinationRoot() + '/boilerplate.zip')
             .on('error', (error) => {
                 // remove boilerplate zip archive
                 fs.unlinkSync(this.destinationRoot() + '/boilerplate.zip');
-                this.env.error('\n' + chalk.red('❌ ERROR: ') + 'There was a problem locating the Local add-on boilerplate archive to be unpacked.');
+                this._error('There was a problem locating the Local add-on boilerplate archive to be unpacked.');
             });
 
         try {
@@ -140,7 +162,7 @@ class LocalAddonGenerator extends Generator {
         } catch (error) {
             // remove boilerplate zip archive
             fs.unlinkSync(this.destinationRoot() + '/boilerplate.zip');
-            this.env.error('\n' + chalk.red('❌ ERROR: ') + 'There was a problem unpacking the Local add-on boilerplate archive.');
+            this._error('There was a problem unpacking the Local add-on boilerplate archive.');
         }
 
         // remove boilerplate zip archive
@@ -152,21 +174,21 @@ class LocalAddonGenerator extends Generator {
         } catch(error) {
             // remove unpacked boilerplate archive
             removeDirectory(this.destinationRoot() + '/' + this.addonBoilerplateArchiveName);
-            this.env.error('\n' + chalk.red('❌ ERROR: ') + 'There was a problem setting up the Local add-on directory.');
+            this._error('There was a problem setting up the Local add-on directory.');
         }
 
-        this.log('\n' + chalk.green('✅ DONE: ') + 'Success! Your Local add-on directory has been created.');
+        this._completion('Success! Your Local add-on directory has been created.');
     }
 
     install() {
-        this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Setting up your new add-on in the Local application...');
+        this._info('Setting up your new add-on in the Local application...');
         // symlink new addon (if needed)
         if(this.shouldSymlinkAddon) {
             fs.symlinkSync(this.destinationRoot() + '/' + this.addonName, getLocalDirectory(this.localApp) + '/addons/' + this.addonName);
         }
         // enable addon (if needed)
         if(this.shouldEnableAddon) {
-            this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Enabling your add-on...');
+            this._info('Enabling your add-on...');
             enableAddon(this.localApp, this.addonName);
         }
     }
@@ -174,8 +196,8 @@ class LocalAddonGenerator extends Generator {
     end() {
         // clean up as needed
         // confirm success/failure
-        this.log('\n' + chalk.green('✅ DONE: ') + 'Your ' + this.localApp + ' add-on has been created and set up successfully.');
-        this.log('\n' + chalk.yellow('🔈 INFO: ') + 'You can find the directory for your newly created add-on at ' + this.destinationRoot() + '/' + this.addonName);
+        this._completion('Your ' + this.localApp + ' add-on has been created and set up successfully.');
+        this._info('You can find the directory for your newly created add-on at ' + this.destinationRoot() + '/' + this.addonName);
         // print next steps, links, etc
     }
 }
