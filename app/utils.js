@@ -70,10 +70,12 @@ const confirmExistingLocalAddonDirectories = function(localApp) {
 const confirmExistingLocalAddonNames = function(localApp) {
     var existingAddonNames = new Set();
     fs.readdirSync(getLocalDirectory(localApp) + '/addons').forEach((addonDirectory) => {
-        const package = getLocalDirectory(localApp) + '/addons/' + addonDirectory + '/package.json';
-        const packageJSON = jetpack.read(package, 'json');
-        const addonName = packageJSON['productName'];
-        existingAddonNames.add(addonName);
+        if(!addonDirectory.startsWith('.')) {
+            const package = getLocalDirectory(localApp) + '/addons/' + addonDirectory + '/package.json';
+            const packageJSON = jetpack.read(package, 'json');
+            const addonName = packageJSON['productName'];
+            existingAddonNames.add(addonName);
+        }
     });
     return existingAddonNames;
 };
