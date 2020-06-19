@@ -59,7 +59,7 @@ class LocalAddonGenerator extends Generator {
         this.shouldEnableAddon = !this.options['disable'] && (this.shouldPlaceAddonDirectly || this.shouldSymlinkAddon);
     }
 
-    // PRIVATE METHODS
+    // PRIVATE METHODS FOR USER INTERACTION
 
     async _promptUser(promptProperties) {
         promptProperties.name = 'userResponse';
@@ -90,8 +90,10 @@ class LocalAddonGenerator extends Generator {
         this.log(ascii);
         this.log(chalk.bgGreen.white.bold('                                LOCAL ADDON CREATOR                                \n'));
         this.log(chalk.bold('** Instructions here... **'));
-        // check existing Local installations
+        
         this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Checking on your existing Local installations and add-ons...');
+
+        // check existing Local installations
         const localInstallations = confirmLocalInstallations();
         if(this.preferLocalBeta && localInstallations.has(apps.localBeta)) {
             this.localApp = apps.localBeta;
@@ -102,6 +104,7 @@ class LocalAddonGenerator extends Generator {
         } else {
             this._error('No installations of Local found! Please install Local at https://localwp.com to create an add-on.');
         }
+
         // check existing Local add-ons
         try {
             this.existingAddons = confirmExistingLocalAddons(this.localApp);
@@ -109,6 +112,7 @@ class LocalAddonGenerator extends Generator {
             this._warn('There was a problem identifying your existing Local add-ons.');
             this.existingAddons = new Set();
         }
+
         this._completion('Everything looks good! Let\'s start making that new add-on...');
     }
 
@@ -116,6 +120,7 @@ class LocalAddonGenerator extends Generator {
         if(this.addonProductName === undefined || this.addonDirectoryName === undefined) {
             this.log('\n' + chalk.cyan('🎤 PROMPTS: ') + 'We need a bit of information before we can create your add-on.');
         }
+
         // get addon product name (if needed)
         if(this.addonProductName === undefined) {
             this.addonProductName = await this._promptUser({
@@ -157,6 +162,7 @@ class LocalAddonGenerator extends Generator {
 
     async writing() {
         this._info('Pulling down the boilerplate Local add-on to set up...');
+
         // if symlink flag is not used, create add-on directly in Local add-ons directory
         if(this.shouldPlaceAddonDirectly) {
             this.destinationRoot(getLocalDirectory(this.localApp) + '/addons');
@@ -193,10 +199,12 @@ class LocalAddonGenerator extends Generator {
 
     install() {
         this._info('Setting up your new add-on in the Local application...');
+        
         // symlink new addon (if needed)
         if(this.shouldSymlinkAddon) {
             fs.symlinkSync(this.destinationRoot() + '/' + this.addonDirectoryName, getLocalDirectory(this.localApp) + '/addons/' + this.addonDirectoryName);
         }
+
         // enable addon (if needed)
         if(this.shouldEnableAddon) {
             this._info('Enabling your add-on...');
