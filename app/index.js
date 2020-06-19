@@ -89,6 +89,7 @@ class LocalAddonGenerator extends Generator {
         // print greeting, instructions, etc
         this.log(ascii);
         this.log(chalk.bgGreen.white.bold('                                LOCAL ADDON CREATOR                                \n'));
+        this.log(chalk.bold('** Instructions here... **'));
         // check existing Local installations
         this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Checking on your existing Local installations and add-ons...');
         const localInstallations = confirmLocalInstallations();
@@ -117,8 +118,8 @@ class LocalAddonGenerator extends Generator {
         if(this.addonProductName === undefined) {
             this.addonProductName = await this._promptUser({
                 type: 'input',
-                message: 'What is the name of your addon?',
-                default: 'my-new-local-addon'
+                message: 'What is the name of your addon? This will be shown to users.',
+                default: 'My New Local Addon'
             });
         }
         // confirm product name availability
@@ -126,7 +127,7 @@ class LocalAddonGenerator extends Generator {
             this.addonProductName = await this._promptUser({
                 type: 'input',
                 message: 'An add-on with the provided name already exists. What is the name of your addon?',
-                default: 'my-new-local-addon'
+                default: 'My New Local Addon'
             });
         }
 
