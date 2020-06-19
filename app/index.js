@@ -142,35 +142,13 @@ class LocalAddonGenerator extends Generator {
             this.destinationRoot(getLocalDirectory(this.localApp) + '/addons');
         }
 
-        const archive = fs.createWriteStream('./boilerplate.zip');
-
         try {
             // pull down boilerplate zip archive
-            const response = await fetch(this.addonBoilerplate);
-            response.body.pipe(archive);
-            
+            const boilerplate = await fetch(this.addonBoilerplate);
+            await boilerplate.body.pipe(unzipper.Extract({ path: this.destinationRoot() })).promise();
         } catch(error) {
             this._error('There was a problem retrieving the Local add-on boilerplate archive.');
         }
-
-        const readStream = fs.createReadStream(this.destinationRoot() + '/boilerplate.zip')
-            .on('error', (error) => {
-                // remove boilerplate zip archive
-                fs.unlinkSync(this.destinationRoot() + '/boilerplate.zip');
-                this._error('There was a problem locating the Local add-on boilerplate archive to be unpacked.');
-            });
-
-        try {
-            // unzip boilerplate archive
-            await readStream.pipe(unzipper.Extract({ path: this.destinationRoot() })).promise();
-        } catch (error) {
-            // remove boilerplate zip archive
-            fs.unlinkSync(this.destinationRoot() + '/boilerplate.zip');
-            this._error('There was a problem unpacking the Local add-on boilerplate archive.');
-        }
-
-        // remove boilerplate zip archive
-        fs.unlinkSync(this.destinationRoot() + '/boilerplate.zip');
         
         try {
             // rename addon folder
