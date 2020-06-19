@@ -1,6 +1,7 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const os = require('os');
 const fetch = require('node-fetch');
+const jetpack = require('fs-jetpack');
 const chalk = require('chalk');
 const unzipper = require('unzipper');
 const Generator = require('yeoman-generator');
@@ -172,12 +173,21 @@ class LocalAddonGenerator extends Generator {
             // rename addon folder
             fs.renameSync(this.destinationRoot() + '/' + this.addonBoilerplateArchiveName, this.destinationRoot() + '/' + this.addonDirectoryName);
         } catch(error) {
+            this.log(error);
             // remove unpacked boilerplate archive
             removeDirectory(this.destinationRoot() + '/' + this.addonBoilerplateArchiveName);
             this._error('There was a problem setting up the Local add-on directory.');
         }
 
         this._completion('Success! Your Local add-on directory has been created.');
+        this._info('Initializing your add-on with your information...');
+        
+        const packageJSON = jetpack.read(this.destinationRoot() + '/' + this.addonDirectoryName + '/package.json', 'json');
+        packageJSON['name'] = this.addonDirectoryName;
+        packageJSON['productName'] = this.addonProductName;
+        jetpack.write(this.destinationRoot() + '/' + this.addonDirectoryName + '/package.json', packageJSON);
+
+        this._completion('Looking good! Your Local add-on is configured.');
     }
 
     install() {
