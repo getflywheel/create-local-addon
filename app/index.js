@@ -1,4 +1,5 @@
 const fs = require('fs-extra');
+const path = require('path');
 const fetch = require('node-fetch');
 const jetpack = require('fs-jetpack');
 const chalk = require('chalk');
@@ -142,7 +143,7 @@ class LocalAddonGenerator extends Generator {
             });
         }
         // confirm directory name availability
-        while(Array.from(this.existingAddonNames.values()).includes(this.addonDirectoryName) || Array.from(this.existingAddonDirectories.values()).includes(this.addonDirectoryName)) {
+        while(this.existingAddonNames.has(this.addonDirectoryName) || this.existingAddonDirectories.has(this.addonDirectoryName)) {
             this.addonDirectoryName = await this._promptUser({
                 type: 'input',
                 message: 'An add-on with the name or directory ' + this.addonDirectoryName + ' already exists. Please choose another.',
@@ -173,20 +174,24 @@ class LocalAddonGenerator extends Generator {
         
         try {
             // rename addon folder
-            fs.renameSync(this.destinationRoot() + '/' + this.addonBoilerplateArchiveName, this.destinationRoot() + '/' + this.addonDirectoryName);
+            fs.renameSync(
+                path.join(this.destinationRoot(), this.addonBoilerplateArchiveName),
+                path.join(this.destinationRoot(), this.addonDirectoryName)
+            );
         } catch(error) {
             // remove unpacked boilerplate archive
-            removeDirectory(this.destinationRoot() + '/' + this.addonBoilerplateArchiveName);
+            removeDirectory(path.join(this.destinationRoot(), this.addonBoilerplateArchiveName));
             this._error('There was a problem setting up the Local add-on directory.');
         }
 
         this._completion('Success! Your Local add-on directory has been created.');
         this._info('Initializing your add-on with your information...');
         
-        const packageJSON = jetpack.read(this.destinationRoot() + '/' + this.addonDirectoryName + '/package.json', 'json');
+        const packageJSONPath = path.join(this.destinationRoot(), this.addonDirectoryName, 'package.json');
+        const packageJSON = jetpack.read(packageJSONPath, 'json');
         packageJSON['name'] = this.addonDirectoryName;
         packageJSON['productName'] = this.addonProductName;
-        jetpack.write(this.destinationRoot() + '/' + this.addonDirectoryName + '/package.json', packageJSON);
+        jetpack.write(packageJSONPath, packageJSON);
 
         this._completion('Looking good! Your Local add-on is configured.');
     }
@@ -196,7 +201,10 @@ class LocalAddonGenerator extends Generator {
 
         // symlink new addon (if needed)
         if(this.shouldSymlinkAddon) {
-            fs.symlinkSync(this.destinationRoot() + '/' + this.addonDirectoryName, getLocalDirectory(this.localApp) + '/addons/' + this.addonDirectoryName);
+            fs.symlinkSync(
+                path.join(this.destinationRoot(), this.addonDirectoryName),
+                path.join(getLocalDirectory(this.localApp), 'addons', this.addonDirectoryName)
+            );
         }
 
         // enable addon (if needed)
@@ -210,7 +218,7 @@ class LocalAddonGenerator extends Generator {
         // clean up as needed
         // confirm success/failure
         this._completion('Your ' + this.localApp + ' add-on has been created and set up successfully.');
-        this._info('You can find the directory for your newly created add-on at ' + this.destinationRoot() + '/' + this.addonDirectoryName);
+        this._info('You can find the directory for your newly created add-on at ' + path.join(this.destinationRoot(), this.addonDirectoryName));
         // print next steps, links, etc
     }
 }

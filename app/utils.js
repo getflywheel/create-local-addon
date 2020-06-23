@@ -1,6 +1,7 @@
 const fs = require('fs-extra');
 const jetpack = require('fs-jetpack');
 const os = require('os');
+const path = require('path');
 
 const platforms = {
     macOS: 'darwin',
@@ -13,27 +14,28 @@ const apps = {
     localBeta: 'Local Beta'
 };
 
-const removeDirectory = function(path) {
-    if(!fs.existsSync(path))
+const removeDirectory = function(filePath) {
+    if(!fs.existsSync(filePath))
         return;
-    if(fs.lstatSync(path).isFile()) {
-        fs.unlinkSync(path);
+    if(fs.lstatSync(filePath).isFile()) {
+        fs.unlinkSync(filePath);
         return;
     }
-    fs.readdirSync(path).forEach((member) => {
-        if(fs.lstatSync(path + '/' + member).isDirectory()) {
-            removeDirectory(path + '/' + member);
+    fs.readdirSync(filePath).forEach((member) => {
+        const memberPath = path.join(filePath, member);
+        if(fs.lstatSync(memberPath).isDirectory()) {
+            removeDirectory(memberPath);
         } else {
-            fs.unlinkSync(path + '/' + member);
+            fs.unlinkSync(memberPath);
         }
     });
-    fs.rmdirSync(path);
+    fs.rmdirSync(filePath);
 };
 
 const getLocalDirectory = function(localApp) {
     const platform = os.platform();
     if(platform === platforms.macOS) {
-        return os.homedir() + '/Library/Application Support/' + localApp;
+        return path.join(os.homedir(), 'Library/Application Support', localApp);
     }
 };
 
@@ -50,10 +52,11 @@ const confirmLocalInstallations = function() {
 
 const confirmExistingLocalAddons = function(localApp) {
     var existingAddons = new Map();
-    const localAddonsPath = getLocalDirectory(localApp) + '/addons';
+    const localAddonsPath = path.join(getLocalDirectory(localApp), 'addons');
     fs.readdirSync(localAddonsPath).forEach((addonDirectory) => {
-        if(!addonDirectory.startsWith('.') && fs.lstatSync(localAddonsPath + '/' + addonDirectory).isDirectory()) {
-            const package = localAddonsPath + '/' + addonDirectory + '/package.json';
+        const addonDirectoryPath = path.join(localAddonsPath, addonDirectory);
+        if(!addonDirectory.startsWith('.') && fs.lstatSync(addonDirectoryPath).isDirectory()) {
+            const package = path.join(addonDirectoryPath, 'package.json');
             const packageJSON = jetpack.read(package, 'json');
             if(packageJSON !== undefined) {
                 const addonProductName = packageJSON['productName'];
@@ -74,8 +77,9 @@ const confirmExistingLocalAddonNames = function(localApp) {
     var existingAddonNames = new Set();
     const localAddonsPath = getLocalDirectory(localApp) + '/addons';
     fs.readdirSync(localAddonsPath).forEach((addonDirectory) => {
-        if(!addonDirectory.startsWith('.') && fs.lstatSync(localAddonsPath + '/' + addonDirectory).isDirectory()) {
-            const package = localAddonsPath + '/' + addonDirectory + '/package.json';
+        const addonDirectoryPath = path.join(localAddonsPath, addonDirectory);
+        if(!addonDirectory.startsWith('.') && fs.lstatSync(addonDirectoryPath).isDirectory()) {
+            const package = path.join(addonDirectoryPath, 'package.json');
             const packageJSON = jetpack.read(package, 'json');
             if(packageJSON !== undefined) {
                 const addonName = packageJSON['productName'];
@@ -87,7 +91,7 @@ const confirmExistingLocalAddonNames = function(localApp) {
 };
 
 const enableAddon = function(localApp, addonName) {
-    const enabledAddons = getLocalDirectory(localApp) + '/enabled-addons.json';
+    const enabledAddons = path.join(getLocalDirectory(localApp), 'enabled-addons.json');
     const enabledAddonsJSON = jetpack.read(enabledAddons, 'json');
     enabledAddonsJSON[addonName] = true
     jetpack.write(enabledAddons, enabledAddonsJSON);
