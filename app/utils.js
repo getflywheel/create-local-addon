@@ -57,8 +57,8 @@ const confirmExistingLocalAddons = function(localApp) {
         const addonDirectoryPath = path.join(localAddonsPath, addonDirectory);
         if(!addonDirectory.startsWith('.') && fs.lstatSync(addonDirectoryPath).isDirectory()) {
             const package = path.join(addonDirectoryPath, 'package.json');
-            const packageJSON = jetpack.read(package, 'json');
-            if(packageJSON !== undefined) {
+            if(fs.existsSync(package)) {
+                const packageJSON = fs.readJsonSync(package);
                 const addonProductName = packageJSON['productName'];
                 existingAddons.set(addonProductName, addonDirectory);
             }
@@ -80,8 +80,8 @@ const confirmExistingLocalAddonNames = function(localApp) {
         const addonDirectoryPath = path.join(localAddonsPath, addonDirectory);
         if(!addonDirectory.startsWith('.') && fs.lstatSync(addonDirectoryPath).isDirectory()) {
             const package = path.join(addonDirectoryPath, 'package.json');
-            const packageJSON = jetpack.read(package, 'json');
-            if(packageJSON !== undefined) {
+            if(fs.existsSync(package)) {
+                const packageJSON = fs.readJsonSync(package);
                 const addonName = packageJSON['productName'];
                 existingAddonNames.add(addonName);
             }
@@ -92,9 +92,9 @@ const confirmExistingLocalAddonNames = function(localApp) {
 
 const enableAddon = function(localApp, addonName) {
     const enabledAddons = path.join(getLocalDirectory(localApp), 'enabled-addons.json');
-    const enabledAddonsJSON = jetpack.read(enabledAddons, 'json');
+    const enabledAddonsJSON = fs.readJsonSync(enabledAddons);
     enabledAddonsJSON[addonName] = true
-    jetpack.write(enabledAddons, enabledAddonsJSON);
+    fs.readJsonSync(enabledAddons, enabledAddonsJSON);
 };
 
 module.exports = {

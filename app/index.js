@@ -1,7 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
 const fetch = require('node-fetch');
-const jetpack = require('fs-jetpack');
 const chalk = require('chalk');
 const unzipper = require('unzipper');
 const Generator = require('yeoman-generator');
@@ -112,6 +111,7 @@ class LocalAddonGenerator extends Generator {
             this.existingAddonNames = confirmExistingLocalAddonNames(this.localApp);
             this.existingAddonDirectories = confirmExistingLocalAddonDirectories(this.localApp);
         } catch(error) {
+            this.log(error);
             this._warn('There was a problem identifying your existing Local add-ons.');
             this.existingAddonNames = new Set();
             this.existingAddonDirectories = new Set();
@@ -188,10 +188,10 @@ class LocalAddonGenerator extends Generator {
         this._info('Initializing your add-on with your information...');
         
         const packageJSONPath = path.join(this.destinationRoot(), this.addonDirectoryName, 'package.json');
-        const packageJSON = jetpack.read(packageJSONPath, 'json');
+        const packageJSON = fs.readJsonSync(packageJSONPath);
         packageJSON['name'] = this.addonDirectoryName;
         packageJSON['productName'] = this.addonProductName;
-        jetpack.write(packageJSONPath, packageJSON);
+        fs.writeJsonSync(packageJSONPath, packageJSON);
 
         this._completion('Looking good! Your Local add-on is configured.');
     }
