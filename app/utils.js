@@ -50,12 +50,15 @@ const confirmLocalInstallations = function() {
 
 const confirmExistingLocalAddons = function(localApp) {
     var existingAddons = new Map();
-    fs.readdirSync(getLocalDirectory(localApp) + '/addons').forEach((addonDirectory) => {
-        if(!addonDirectory.startsWith('.')) {
-            const package = getLocalDirectory(localApp) + '/addons/' + addonDirectory + '/package.json';
+    const localAddonsPath = getLocalDirectory(localApp) + '/addons';
+    fs.readdirSync(localAddonsPath).forEach((addonDirectory) => {
+        if(!addonDirectory.startsWith('.') && fs.lstatSync(localAddonsPath + '/' + addonDirectory).isDirectory()) {
+            const package = localAddonsPath + '/' + addonDirectory + '/package.json';
             const packageJSON = jetpack.read(package, 'json');
-            const addonProductName = packageJSON['productName'];
-            existingAddons.set(addonProductName, addonDirectory);
+            if(packageJSON !== undefined) {
+                const addonProductName = packageJSON['productName'];
+                existingAddons.set(addonProductName, addonDirectory);
+            }
         }
     });
     return existingAddons;
@@ -69,12 +72,15 @@ const confirmExistingLocalAddonDirectories = function(localApp) {
 
 const confirmExistingLocalAddonNames = function(localApp) {
     var existingAddonNames = new Set();
-    fs.readdirSync(getLocalDirectory(localApp) + '/addons').forEach((addonDirectory) => {
-        if(!addonDirectory.startsWith('.')) {
-            const package = getLocalDirectory(localApp) + '/addons/' + addonDirectory + '/package.json';
+    const localAddonsPath = getLocalDirectory(localApp) + '/addons';
+    fs.readdirSync(localAddonsPath).forEach((addonDirectory) => {
+        if(!addonDirectory.startsWith('.') && fs.lstatSync(localAddonsPath + '/' + addonDirectory).isDirectory()) {
+            const package = localAddonsPath + '/' + addonDirectory + '/package.json';
             const packageJSON = jetpack.read(package, 'json');
-            const addonName = packageJSON['productName'];
-            existingAddonNames.add(addonName);
+            if(packageJSON !== undefined) {
+                const addonName = packageJSON['productName'];
+                existingAddonNames.add(addonName);
+            }
         }
     });
     return existingAddonNames;
