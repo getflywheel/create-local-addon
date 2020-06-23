@@ -5,7 +5,7 @@ const chalk = require('chalk');
 const unzipper = require('unzipper');
 const Generator = require('yeoman-generator');
 
-const { platforms, apps, removeDirectory, getLocalDirectory, confirmLocalInstallations, confirmExistingLocalAddons, confirmExistingLocalAddonDirectories, confirmExistingLocalAddonNames, enableAddon } = require('./utils');
+const { apps, removeDirectory, getLocalDirectory, confirmLocalInstallations, confirmExistingLocalAddonDirectories, confirmExistingLocalAddonNames, enableAddon } = require('./utils');
 const { ascii } = require('./ascii.js');
 
 class LocalAddonGenerator extends Generator {

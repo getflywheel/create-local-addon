@@ -81,7 +81,10 @@ const confirmExistingLocalAddonNames = function(localApp) {
 };
 
 const enableAddon = function(localApp, addonName) {
-    // ...
+    const enabledAddons = getLocalDirectory(localApp) + '/enabled-addons.json';
+    const enabledAddonsJSON = jetpack.read(enabledAddons, 'json');
+    enabledAddonsJSON[addonName] = true
+    jetpack.write(enabledAddons, enabledAddonsJSON);
 };
 
 module.exports = {
