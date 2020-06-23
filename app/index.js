@@ -111,7 +111,6 @@ class LocalAddonGenerator extends Generator {
             this.existingAddonNames = confirmExistingLocalAddonNames(this.localApp);
             this.existingAddonDirectories = confirmExistingLocalAddonDirectories(this.localApp);
         } catch(error) {
-            this.log(error);
             this._warn('There was a problem identifying your existing Local add-ons.');
             this.existingAddonNames = new Set();
             this.existingAddonDirectories = new Set();

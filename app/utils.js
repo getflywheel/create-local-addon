@@ -1,5 +1,4 @@
 const fs = require('fs-extra');
-const jetpack = require('fs-jetpack');
 const os = require('os');
 const path = require('path');
 
@@ -91,10 +90,10 @@ const confirmExistingLocalAddonNames = function(localApp) {
 };
 
 const enableAddon = function(localApp, addonName) {
-    const enabledAddons = path.join(getLocalDirectory(localApp), 'enabled-addons.json');
-    const enabledAddonsJSON = fs.readJsonSync(enabledAddons);
-    enabledAddonsJSON[addonName] = true
-    fs.readJsonSync(enabledAddons, enabledAddonsJSON);
+    const enabledAddonsPath = path.join(getLocalDirectory(localApp), 'enabled-addons.json');
+    const enabledAddonsJSON = fs.readJsonSync(enabledAddonsPath);
+    enabledAddonsJSON[addonName] = true;
+    fs.writeJsonSync(enabledAddonsPath, enabledAddonsJSON);
 };
 
 module.exports = {
