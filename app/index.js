@@ -92,7 +92,7 @@ class LocalAddonGenerator extends Generator {
         this.log(chalk.bgGreen.white.bold('                                LOCAL ADDON CREATOR                                \n'));
         this.log(chalk.bold('** Instructions here... **'));
         
-        this.log('\n' + chalk.yellow('🔈 INFO: ') + 'Checking on your existing Local installations and add-ons...');
+        this._info('Checking on your existing Local installations and add-ons...');
 
         // check existing Local installations
         const localInstallations = confirmLocalInstallations();
