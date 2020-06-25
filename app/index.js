@@ -58,6 +58,7 @@ class LocalAddonGenerator extends Generator {
         this.shouldPlaceAddonDirectly = this.options['place-directly'];
         this.shouldSymlinkAddon = !this.options['do-not-symlink'] && !this.shouldPlaceAddonDirectly;
         this.shouldEnableAddon = !this.options['disable'] && (this.shouldPlaceAddonDirectly || this.shouldSymlinkAddon);
+        this.shouldBeVerbose = this.options['verbose'];
 
         this.targetDirectoryPath = this.destinationRoot();
     }
@@ -82,7 +83,10 @@ class LocalAddonGenerator extends Generator {
         this.log('\n' + chalk.red('🚨 WARNING: ') + message);
     }
 
-    _error(message) {
+    _error(message, error) {
+        if(this.shouldBeVerbose && error !== undefined) {
+            this.log(error);
+        }
         this.env.error('\n' + chalk.red('❌ ERROR: ') + message);
     }
 
@@ -168,7 +172,7 @@ class LocalAddonGenerator extends Generator {
             const boilerplate = await fetch(this.addonBoilerplate);
             await boilerplate.body.pipe(unzipper.Extract({ path: this.targetDirectoryPath })).promise();
         } catch(error) {
-            this._error('There was a problem retrieving the Local add-on boilerplate archive.');
+            this._error('There was a problem retrieving the Local add-on boilerplate archive.', error);
         }
         
         try {
@@ -180,7 +184,7 @@ class LocalAddonGenerator extends Generator {
         } catch(error) {
             // remove unpacked boilerplate archive
             removeDirectory(path.join(this.targetDirectoryPath, this.addonBoilerplateArchiveName));
-            this._error('There was a problem setting up the Local add-on directory.');
+            this._error('There was a problem setting up the Local add-on directory.', error);
         }
 
         this._completion('Success! Your Local add-on directory has been created.');
