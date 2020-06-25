@@ -58,6 +58,8 @@ class LocalAddonGenerator extends Generator {
         this.shouldPlaceAddonDirectly = this.options['place-directly'];
         this.shouldSymlinkAddon = !this.options['do-not-symlink'] && !this.shouldPlaceAddonDirectly;
         this.shouldEnableAddon = !this.options['disable'] && (this.shouldPlaceAddonDirectly || this.shouldSymlinkAddon);
+
+        this.targetDirectoryPath = this.destinationRoot();
     }
 
     // PRIVATE METHODS FOR USER INTERACTION
@@ -159,14 +161,12 @@ class LocalAddonGenerator extends Generator {
         this._info('Pulling down the boilerplate Local add-on to set up...');
 
         // if symlink flag is not used, create add-on directly in Local add-ons directory
-        if(this.shouldPlaceAddonDirectly) {
-            this.destinationRoot(getLocalDirectory(this.localApp) + '/addons');
-        }
+        this.targetDirectoryPath = this.shouldPlaceAddonDirectly ? getLocalDirectory(this.localApp) + '/addons' : this.destinationRoot();
 
         try {
             // pull down and unpack boilerplate zip archive
             const boilerplate = await fetch(this.addonBoilerplate);
-            await boilerplate.body.pipe(unzipper.Extract({ path: this.destinationRoot() })).promise();
+            await boilerplate.body.pipe(unzipper.Extract({ path: this.targetDirectoryPath })).promise();
         } catch(error) {
             this._error('There was a problem retrieving the Local add-on boilerplate archive.');
         }
@@ -174,19 +174,19 @@ class LocalAddonGenerator extends Generator {
         try {
             // rename addon folder
             fs.renameSync(
-                path.join(this.destinationRoot(), this.addonBoilerplateArchiveName),
-                path.join(this.destinationRoot(), this.addonDirectoryName)
+                path.join(this.targetDirectoryPath, this.addonBoilerplateArchiveName),
+                path.join(this.targetDirectoryPath, this.addonDirectoryName)
             );
         } catch(error) {
             // remove unpacked boilerplate archive
-            removeDirectory(path.join(this.destinationRoot(), this.addonBoilerplateArchiveName));
+            removeDirectory(path.join(this.targetDirectoryPath, this.addonBoilerplateArchiveName));
             this._error('There was a problem setting up the Local add-on directory.');
         }
 
         this._completion('Success! Your Local add-on directory has been created.');
         this._info('Initializing your add-on with your information...');
         
-        const packageJSONPath = path.join(this.destinationRoot(), this.addonDirectoryName, 'package.json');
+        const packageJSONPath = path.join(this.targetDirectoryPath, this.addonDirectoryName, 'package.json');
         const packageJSON = fs.readJsonSync(packageJSONPath);
         packageJSON['name'] = this.addonDirectoryName;
         packageJSON['productName'] = this.addonProductName;
@@ -201,13 +201,18 @@ class LocalAddonGenerator extends Generator {
         // symlink new addon (if needed)
         if(this.shouldSymlinkAddon) {
             fs.symlinkSync(
-                path.join(this.destinationRoot(), this.addonDirectoryName),
+                path.join(this.targetDirectoryPath, this.addonDirectoryName),
                 path.join(getLocalDirectory(this.localApp), 'addons', this.addonDirectoryName)
             );
         }
 
         // enable addon (if needed)
         if(this.shouldEnableAddon) {
+            this._info('Building dependencies for your add-on...');
+            const addonDirectoryPath = path.join(this.targetDirectoryPath, this.addonDirectoryName);
+            this.destinationRoot(addonDirectoryPath);
+            this.spawnCommandSync('yarn');
+            this.spawnCommandSync('yarn', ['build']);
             this._info('Enabling your add-on...');
             enableAddon(this.localApp, this.addonDirectoryName);
         }
@@ -217,7 +222,8 @@ class LocalAddonGenerator extends Generator {
         // clean up as needed
         // confirm success/failure
         this._completion('Your ' + this.localApp + ' add-on has been created and set up successfully.');
-        this._info('You can find the directory for your newly created add-on at ' + path.join(this.destinationRoot(), this.addonDirectoryName));
+        const addonDirectoryPath = path.join(this.targetDirectoryPath, this.addonDirectoryName);
+        this._info('You can find the directory for your newly created add-on at ' + addonDirectoryPath);
         // print next steps, links, etc
     }
 }
