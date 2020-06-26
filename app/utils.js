@@ -73,7 +73,8 @@ const getDirectoryContents = function(directoryPath) {
 }
 
 const confirmExistingLocalAddonDirectories = function(localApp) {
-    return getDirectoryContents(getLocalDirectory(localApp) + '/addons');
+    const localAddonsDirectory = path.join(getLocalDirectory(localApp), '/addons');
+    return getDirectoryContents(localAddonsDirectory);
 };
 
 const confirmExistingLocalAddonNames = function(localApp) {
