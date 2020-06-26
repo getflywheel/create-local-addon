@@ -43,6 +43,11 @@ class LocalAddonGenerator extends Generator {
             desc: 'Skip enabling add-on',
             default: false
         });
+        this.option('verbsose', {
+            type: Boolean,
+            desc: 'Print error messages on occurrence',
+            default: false
+        });
 
         this.localApp = 'Local';
         this.existingAddonNames = new Set();
