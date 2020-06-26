@@ -66,10 +66,14 @@ const confirmExistingLocalAddons = function(localApp) {
     return existingAddons;
 };
 
+const getDirectoryContents = function(directoryPath) {
+    var contents = new Set();
+    fs.readdirSync(directoryPath).forEach((file) => contents.add(file));
+    return contents;
+}
+
 const confirmExistingLocalAddonDirectories = function(localApp) {
-    var existingAddonDirectories = new Set();
-    fs.readdirSync(getLocalDirectory(localApp) + '/addons').forEach((addonDirectory) => existingAddonDirectories.add(addonDirectory));
-    return existingAddonDirectories;
+    return getDirectoryContents(getLocalDirectory(localApp) + '/addons');
 };
 
 const confirmExistingLocalAddonNames = function(localApp) {
@@ -103,6 +107,7 @@ module.exports = {
     getLocalDirectory,
     confirmLocalInstallations,
     confirmExistingLocalAddons,
+    getDirectoryContents,
     confirmExistingLocalAddonDirectories,
     confirmExistingLocalAddonNames,
     enableAddon
