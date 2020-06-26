@@ -40,7 +40,7 @@ class LocalAddonGenerator extends Generator {
         });
         this.option('disable', {
             type: Boolean,
-            desc: 'Skip enabling add-on',
+            desc: 'Skip building and enabling add-on',
             default: false
         });
         this.option('verbsose', {
