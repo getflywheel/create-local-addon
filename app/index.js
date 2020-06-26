@@ -48,6 +48,11 @@ class LocalAddonGenerator extends Generator {
             desc: 'Print error messages on occurrence',
             default: false
         });
+        this.option('silent', {
+            type: Boolean,
+            desc: 'Do not print any logs that are not warnings or errors',
+            default: false
+        });
 
         this.localApp = 'Local';
         this.existingAddonNames = new Set();
@@ -63,6 +68,7 @@ class LocalAddonGenerator extends Generator {
         this.shouldPlaceAddonDirectly = this.options['place-directly'];
         this.shouldSymlinkAddon = !this.options['do-not-symlink'] && !this.shouldPlaceAddonDirectly;
         this.shouldEnableAddon = !this.options['disable'] && (this.shouldPlaceAddonDirectly || this.shouldSymlinkAddon);
+        this.shouldBeSilent = this.options['silent'];
         this.shouldBeVerbose = this.options['verbose'];
 
         this.targetDirectoryPath = this.destinationRoot();
@@ -77,11 +83,15 @@ class LocalAddonGenerator extends Generator {
     }
 
     _info(message) {
-        this.log('\n' + chalk.yellow('🔈 INFO: ') + message);
+        if(!this.shouldBeSilent) {
+            this.log('\n' + chalk.yellow('🔈 INFO: ') + message);
+        }
     }
 
     _completion(message) {
-        this.log('\n' + chalk.green('✅ DONE: ') + message);
+        if(!this.shouldBeSilent) {
+            this.log('\n' + chalk.green('✅ DONE: ') + message);
+        }
     }
 
     _warn(message) {
@@ -99,9 +109,11 @@ class LocalAddonGenerator extends Generator {
 
     initializing() {
         // print greeting, instructions, etc
-        this.log(ascii);
-        this.log(chalk.bgGreen.white.bold('                                LOCAL ADDON CREATOR                                \n'));
-        this.log(chalk.bold('** Instructions here... **'));
+        if(!this.shouldBeSilent) {
+            this.log(ascii);
+            this.log(chalk.bgGreen.white.bold('                                LOCAL ADDON CREATOR                                \n'));
+            this.log(chalk.bold('** Instructions here... **'));
+        }
         
         this._info('Checking on your existing Local installations and add-ons...');
 
