@@ -117,6 +117,14 @@ class LocalAddonGenerator extends Generator {
             this._error('No installations of Local found! Please install Local at https://localwp.com to create an add-on.');
         }
 
+        // check where generator was invoked
+        const localAddonsPath = path.join(getLocalDirectory(this.localApp), 'addons');
+        if(this.targetDirectoryPath === localAddonsPath) {
+            this._info('You seem to be running this generator within the ' + this.localApp + ' add-ons directory. As a result, add-on setup may differ from your slected preferences.');
+            this.shouldPlaceAddonDirectly = true;
+            this.shouldSymlinkAddon = false;
+        }
+
         // check existing Local add-ons
         try {
             this.existingAddonNames = confirmExistingLocalAddonNames(this.localApp);
