@@ -95,7 +95,10 @@ class LocalAddonGenerator extends Generator {
         }
     }
 
-    _warn(message) {
+    _warn(message, error) {
+        if(this.shouldBeVerbose && error !== undefined) {
+            this.log(error);
+        }
         this.log('\n' + chalk.red('🚨 WARNING: ') + message);
     }
 
@@ -146,7 +149,7 @@ class LocalAddonGenerator extends Generator {
                 this.existingTargetDirectoryContents = getDirectoryContents(this.targetDirectoryPath);
             }
         } catch(error) {
-            this._warn('There was a problem identifying your existing Local add-ons.');
+            this._warn('There was a problem identifying your existing Local add-ons.', error);
             this.existingAddonNames = new Set();
             this.existingAddonDirectories = new Set();
         }
