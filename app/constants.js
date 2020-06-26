@@ -45,7 +45,7 @@ Options:
 
             --place-directly  # Place add-on directory directly into Local add-ons directory (automatically adds --do-not-symlink)  Default: false
             --do-not-symlink  # Skip creating a symbolic link in Local add-ons directory to your add-on directory                   Default: false
-            --disable         # Skip enabling add-on                                                                                Default: false
+            --disable         # Skip building and enabling add-on                                                                   Default: false
 
             --verbsose        # Print error messages on occurrence                                                                  Default: false
             --silent          # Do not print any logs that are not warnings or errors                                               Default: false
