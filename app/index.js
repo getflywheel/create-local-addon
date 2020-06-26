@@ -43,7 +43,7 @@ class LocalAddonGenerator extends Generator {
             desc: 'Skip building and enabling add-on',
             default: false
         });
-        this.option('verbsose', {
+        this.option('verbose', {
             type: Boolean,
             desc: 'Print error messages on occurrence',
             default: false
