@@ -241,10 +241,14 @@ class LocalAddonGenerator extends Generator {
 
         // symlink new addon (if needed)
         if(this.shouldSymlinkAddon) {
-            fs.symlinkSync(
-                path.join(this.targetDirectoryPath, this.addonDirectoryName),
-                path.join(getLocalDirectory(this.localApp), 'addons', this.addonDirectoryName)
-            );
+            try {
+                fs.symlinkSync(
+                    path.join(this.targetDirectoryPath, this.addonDirectoryName),
+                    path.join(getLocalDirectory(this.localApp), 'addons', this.addonDirectoryName)
+                );
+            } catch(error) {
+                this._error('There was a problem linking your add-on into the Local add-ons directory. The add-on has been created, but may not appear in the Local application.', error);
+            }
         }
 
         // enable addon (if needed)
