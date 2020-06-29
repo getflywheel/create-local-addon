@@ -113,16 +113,20 @@ class LocalAddonGenerator extends Generator {
         this.log('\n');
         if(!alreadyBuilt) {
             this.log(chalk.green.bold('INSTALLING AND BUILDING ADD-ON DEPENDENCIES'));
-            this.log('If you wish to see your add-on displayed in Local and enable it, you must make sure to install/build your add-ons dependencies.');
-            this.log('Navigate to ' + addonDirectory + ' to install/build your add-on\'s depencies.');
-            this.log('\n');
-            this.log('run           ' + chalk.greenBright('yarn') + '             -- install add-on dependencies');
-            this.log('run           ' + chalk.greenBright('yarn build') + '       -- run build script from package.json');
-            this.log('\n');
+            this.log('If you wish to see your add-on displayed in Local and enable it, you must make sure to install/build your add-on\'s dependencies:');
+            this.log('');
+            this.log(chalk.greenBright.bold('1. ') + 'Navigate to your add-on directory:');
+            this.log('\n          ' + chalk.yellowBright('cd ' + addonDirectory) + '\n');
+            this.log(chalk.greenBright.bold('2. ') + 'Install add-on dependencies:');
+            this.log('\n          ' + chalk.yellowBright('yarn') + '\n');
+            this.log(chalk.greenBright.bold('3. ') + 'Run build script from package.json:');
+            this.log('\n          ' + chalk.yellowBright('yarn build') + '\n');
         }
         this.log(chalk.green.bold('NEXT STEPS'));
-        this.log('...');
-        this.log('\n');
+        this.log(chalk.greenBright.bold('→ ') + 'Looking for resources to help you get started with your add-on? Visit ' + chalk.cyan.bold('https://localwp.com/get-involved'));
+        this.log(chalk.greenBright.bold('→ ') + 'Thinking of submiting your add-on to the Local add-on marketplace? Visit ' + chalk.cyan.bold('https://localwp.com/submit-addon'));
+        this.log('Okay, we\'ll get out of the way and let you start developing! If you have any questions or concerns, try consulting the documentation for Local add-on development.');
+        this.log('');
     }
 
     // ORDERED GENERATOR STEPS
