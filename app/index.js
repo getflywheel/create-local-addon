@@ -1,4 +1,5 @@
 const fs = require('fs-extra');
+const jp = require('fs-jetpack');
 const path = require('path');
 const fetch = require('node-fetch');
 const chalk = require('chalk');
@@ -115,18 +116,20 @@ class LocalAddonGenerator extends Generator {
         if(!alreadyBuilt) {
             this.log(chalk.green('Installing and building your add-on\'s dependencies:'));
             this.log('If you wish to see your add-on displayed in Local and enable it, you must make sure to install/build your add-on\'s dependencies:');
-            this.log('');
-            this.log(chalk.greenBright.bold('1. ') + 'Navigate to your add-on directory:');
-            this.log('\n          ' + chalk.yellowBright('cd ' + addonDirectory) + '\n');
-            this.log(chalk.greenBright.bold('2. ') + 'Install add-on dependencies:');
-            this.log('\n          ' + chalk.yellowBright('yarn') + '\n');
-            this.log(chalk.greenBright.bold('3. ') + 'Run build script from package.json:');
-            this.log('\n          ' + chalk.yellowBright('yarn build') + '\n');
-            this.log(chalk.greenBright.bold('4. ') + 'Enable your add-on in the Local application.');
-            this.log('');
+            this.log('\n' + chalk.greenBright.bold('1. ') + 'Navigate to your add-on directory:\n');
+            this.log('          ' + chalk.yellowBright('cd ' + addonDirectory));
+            this.log('\n' + chalk.greenBright.bold('2. ') + 'Install add-on dependencies:\n');
+            this.log('          ' + chalk.yellowBright('yarn'));
+            this.log('\n' + chalk.greenBright.bold('3. ') + 'Run build script from package.json:\n');
+            this.log('          ' + chalk.yellowBright('yarn build'));
+            this.log('\n' + chalk.greenBright.bold('4. ') + 'Enable your add-on in the Local application.\n');
         }
         this.log(chalk.green('Making changes to your add-on:'));
-        this.log('...');
+        this.log(chalk.greenBright.bold('→ ') + 'You can change your add-on by making changes to the source files:\n');
+        this.log('          ' + chalk.cyanBright(path.join(addonDirectory, 'src')));
+        this.log('\n' + chalk.greenBright.bold('→ ') + 'Compile, watch add-on source files, and trigger recompilation on change:\n');
+        this.log('          ' + chalk.yellowBright('cd ' + addonDirectory));
+        this.log('          ' + chalk.yellowBright('yarn build --watch'));
         this.log('');
         this.log(chalk.green.bold('NEED SOME HELP?'));
         this.log(chalk.greenBright.bold('→ ') + 'Looking for resources to help you get started with your add-on? Visit ' + chalk.cyan.bold('https://localwp.com/get-involved'));
@@ -226,10 +229,6 @@ class LocalAddonGenerator extends Generator {
                 default: this.addonProductName.toLowerCase().replace(/\s+/g, '-')
             });
         }
-
-        // Could prompt here for:
-        //  - this.shouldEnableAddon
-        //  - this.shouldSymlinkAddon
     }
 
     async writing() {
