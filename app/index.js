@@ -6,7 +6,7 @@ const unzipper = require('unzipper');
 const Generator = require('yeoman-generator');
 
 const { apps, removeDirectory, getLocalDirectory, confirmLocalInstallations, confirmExistingLocalAddonDirectories, getDirectoryContents, confirmExistingLocalAddonNames, enableAddon } = require('./utils');
-const { ascii } = require('./constants.js');
+const { title, ascii } = require('./constants.js');
 
 class LocalAddonGenerator extends Generator {
     constructor(args, opts) {
@@ -109,13 +109,29 @@ class LocalAddonGenerator extends Generator {
         this.env.error('\n' + chalk.red('❌ ERROR: ') + message);
     }
 
+    _printFollowupInstructions(addonDirectory, alreadyBuilt) {
+        this.log('\n');
+        if(!alreadyBuilt) {
+            this.log(chalk.green.bold('INSTALLING AND BUILDING ADD-ON DEPENDENCIES'));
+            this.log('If you wish to see your add-on displayed in Local and enable it, you must make sure to install/build your add-ons dependencies.');
+            this.log('Navigate to ' + addonDirectory + ' to install/build your add-on\'s depencies.');
+            this.log('\n');
+            this.log('run           ' + chalk.greenBright('yarn') + '             -- install add-on dependencies');
+            this.log('run           ' + chalk.greenBright('yarn build') + '       -- run build script from package.json');
+            this.log('\n');
+        }
+        this.log(chalk.green.bold('NEXT STEPS'));
+        this.log('...');
+        this.log('\n');
+    }
+
     // ORDERED GENERATOR STEPS
 
     initializing() {
         // print greeting, instructions, etc
         if(!this.shouldBeSilent) {
             this.log(ascii);
-            this.log(chalk.bgGreen.white.bold('                                LOCAL ADDON CREATOR                                \n'));
+            this.log(title);
             this.log(chalk.bold('** Instructions here... **'));
         }
         
@@ -270,6 +286,9 @@ class LocalAddonGenerator extends Generator {
         const addonDirectoryPath = path.join(this.targetDirectoryPath, this.addonDirectoryName);
         this._info('You can find the directory for your newly created add-on at ' + addonDirectoryPath);
         // print next steps, links, etc
+        if(!this.shouldBeSilent) {
+            this._printFollowupInstructions(addonDirectoryPath, this.shouldEnableAddon);
+        }
     }
 }
 
