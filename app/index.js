@@ -111,8 +111,9 @@ class LocalAddonGenerator extends Generator {
 
     _printFollowupInstructions(addonDirectory, alreadyBuilt) {
         this.log('\n');
+        this.log(chalk.green.bold('NEXT STEPS'));
         if(!alreadyBuilt) {
-            this.log(chalk.green.bold('INSTALLING AND BUILDING ADD-ON DEPENDENCIES'));
+            this.log(chalk.green('Installing and building your add-on\'s dependencies:'));
             this.log('If you wish to see your add-on displayed in Local and enable it, you must make sure to install/build your add-on\'s dependencies:');
             this.log('');
             this.log(chalk.greenBright.bold('1. ') + 'Navigate to your add-on directory:');
@@ -121,8 +122,13 @@ class LocalAddonGenerator extends Generator {
             this.log('\n          ' + chalk.yellowBright('yarn') + '\n');
             this.log(chalk.greenBright.bold('3. ') + 'Run build script from package.json:');
             this.log('\n          ' + chalk.yellowBright('yarn build') + '\n');
+            this.log(chalk.greenBright.bold('4. ') + 'Enable your add-on in the Local application.');
+            this.log('');
         }
-        this.log(chalk.green.bold('NEXT STEPS'));
+        this.log(chalk.green('Making changes to your add-on:'));
+        this.log('...');
+        this.log('');
+        this.log(chalk.green.bold('NEED SOME HELP?'));
         this.log(chalk.greenBright.bold('→ ') + 'Looking for resources to help you get started with your add-on? Visit ' + chalk.cyan.bold('https://localwp.com/get-involved'));
         this.log(chalk.greenBright.bold('→ ') + 'Thinking of submiting your add-on to the Local add-on marketplace? Visit ' + chalk.cyan.bold('https://localwp.com/submit-addon'));
         this.log('Okay, we\'ll get out of the way and let you start developing! If you have any questions or concerns, try consulting the documentation for Local add-on development.');
