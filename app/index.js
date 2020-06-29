@@ -45,12 +45,12 @@ class LocalAddonGenerator extends Generator {
         });
         this.option('verbose', {
             type: Boolean,
-            desc: 'Print error messages on occurrence',
+            desc: 'Print status updates during the setup process',
             default: false
         });
-        this.option('silent', {
+        this.option('show-error-traces', {
             type: Boolean,
-            desc: 'Do not print any logs that are not warnings or errors',
+            desc: 'Print full error messages on occurrence',
             default: false
         });
 
@@ -69,8 +69,8 @@ class LocalAddonGenerator extends Generator {
         this.shouldPlaceAddonDirectly = this.options['place-directly'];
         this.shouldSymlinkAddon = !this.options['do-not-symlink'] && !this.shouldPlaceAddonDirectly;
         this.shouldEnableAddon = !this.options['disable'] && (this.shouldPlaceAddonDirectly || this.shouldSymlinkAddon);
-        this.shouldBeSilent = this.options['silent'];
         this.shouldBeVerbose = this.options['verbose'];
+        this.shouldShowFullErrors = this.options['show-error-traces'];
 
         this.targetDirectoryPath = this.destinationRoot();
     }
@@ -84,26 +84,26 @@ class LocalAddonGenerator extends Generator {
     }
 
     _info(message) {
-        if(!this.shouldBeSilent) {
+        if(this.shouldBeVerbose) {
             this.log('\n' + chalk.yellow('🔈 INFO: ') + message);
         }
     }
 
     _completion(message) {
-        if(!this.shouldBeSilent) {
+        if(this.shouldBeVerbose) {
             this.log('\n' + chalk.green('✅ DONE: ') + message);
         }
     }
 
     _warn(message, error) {
-        if(this.shouldBeVerbose && error !== undefined) {
+        if(this.shouldShowFullErrors && error !== undefined) {
             this.log(error);
         }
         this.log('\n' + chalk.red('🚨 WARNING: ') + message);
     }
 
     _error(message, error) {
-        if(this.shouldBeVerbose && error !== undefined) {
+        if(this.shouldShowFullErrors && error !== undefined) {
             this.log(error);
         }
         this.env.error('\n' + chalk.red('❌ ERROR: ') + message);
@@ -139,7 +139,7 @@ class LocalAddonGenerator extends Generator {
 
     initializing() {
         // print greeting, instructions, etc
-        if(!this.shouldBeSilent) {
+        if(this.shouldBeVerbose) {
             this.log(ascii);
             this.log(title);
             this.log(chalk.bold('Hello! We are here today to create a new add-on for the Local application. Yay!'));
@@ -163,7 +163,7 @@ class LocalAddonGenerator extends Generator {
         } else {
             this._error(
                 'No installations of Local found! Please install Local at https://localwp.com before you create an add-on.',
-                new Error('No Local directory found: ' + chalk.cyanBright(getLocalDirectory(apps.local)))
+                'No Local directory found: ' + chalk.cyanBright(getLocalDirectory(apps.local))
             );
         }
 
@@ -192,7 +192,7 @@ class LocalAddonGenerator extends Generator {
     }
 
     async prompting() {
-        if(this.addonProductName === undefined || this.addonDirectoryName === undefined) {
+        if(this.shouldBeVerbose && (this.addonProductName === undefined || this.addonDirectoryName === undefined)) {
             this.log('\n' + chalk.cyan('🎤 PROMPTS: ') + 'We need a bit of information before we can create your add-on.');
         }
 
@@ -304,9 +304,7 @@ class LocalAddonGenerator extends Generator {
         const addonDirectoryPath = path.join(this.targetDirectoryPath, this.addonDirectoryName);
         this._info('You can find the directory for your newly created add-on at ' + chalk.cyanBright(addonDirectoryPath));
         // print next steps, links, etc
-        if(!this.shouldBeSilent) {
-            this._printFollowupInstructions(addonDirectoryPath, this.shouldEnableAddon);
-        }
+        this._printFollowupInstructions(addonDirectoryPath, this.shouldEnableAddon);
     }
 }
 
