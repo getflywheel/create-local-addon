@@ -118,14 +118,15 @@ class LocalAddonGenerator extends Generator {
         this.log(chalk.bold('Okay, let\'s get started!'));
     }
 
-    _printFollowupInstructions(addonDirectory, alreadyBuilt) {
+    _printFollowupInstructions() {
+        const addonDirectoryPath = path.join(this.targetDirectoryPath, this.addonDirectoryName);
         this.log('\n');
         this.log(chalk.green.bold('NEXT STEPS'));
-        if(!alreadyBuilt) {
+        if(!this.shouldEnableAddon) {
             this.log(chalk.green('Installing and building your add-on\'s dependencies:'));
             this.log('If you wish to see your add-on displayed in Local and enable it, you must make sure to install/build your add-on\'s dependencies:');
             this.log('\n' + chalk.greenBright.bold('1. ') + 'Navigate to your add-on directory:\n');
-            this.log('          ' + chalk.yellowBright('cd ' + addonDirectory));
+            this.log('          ' + chalk.yellowBright('cd ' + addonDirectoryPath));
             this.log('\n' + chalk.greenBright.bold('2. ') + 'Install add-on dependencies:\n');
             this.log('          ' + chalk.yellowBright('yarn'));
             this.log('\n' + chalk.greenBright.bold('3. ') + 'Run build script from package.json:\n');
@@ -134,9 +135,14 @@ class LocalAddonGenerator extends Generator {
         }
         this.log(chalk.green('Making changes to your add-on:'));
         this.log(chalk.greenBright.bold('→ ') + 'You can change your add-on by making changes to the source files:\n');
-        this.log('          ' + chalk.cyanBright(path.join(addonDirectory, 'src')));
+        this.log('          ' + chalk.cyanBright(path.join(addonDirectoryPath, 'src')));
+        if(this.shouldSymlinkAddon) {
+            const addonSymlinkPath = path.join(getLocalDirectory(this.localApp), this.addonDirectoryName);
+            this.log('\n' + chalk.greenBright.bold('→ ') + 'A symlink pointing to your add-on directory has been made in the Local add-ons directory:\n');
+            this.log('          ' + chalk.cyanBright(addonSymlinkPath));
+        }
         this.log('\n' + chalk.greenBright.bold('→ ') + 'Compile, watch add-on source files, and trigger recompilation on change:\n');
-        this.log('          ' + chalk.yellowBright('cd ' + addonDirectory));
+        this.log('          ' + chalk.yellowBright('cd ' + addonDirectoryPath));
         this.log('          ' + chalk.yellowBright('yarn build --watch'));
         this.log('');
         this.log(chalk.green.bold('NEED SOME HELP?'));
@@ -303,10 +309,8 @@ class LocalAddonGenerator extends Generator {
         // clean up as needed
         // confirm success/failure
         this._completion('Your ' + this.localApp + ' add-on has been created and set up successfully.');
-        const addonDirectoryPath = path.join(this.targetDirectoryPath, this.addonDirectoryName);
-        this._info('You can find the directory for your newly created add-on at ' + chalk.cyanBright(addonDirectoryPath));
         // print next steps, links, etc
-        this._printFollowupInstructions(addonDirectoryPath, this.shouldEnableAddon);
+        this._printFollowupInstructions();
     }
 }
 
