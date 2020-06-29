@@ -1,5 +1,4 @@
 const fs = require('fs-extra');
-const jp = require('fs-jetpack');
 const path = require('path');
 const fetch = require('node-fetch');
 const chalk = require('chalk');
@@ -264,7 +263,7 @@ class LocalAddonGenerator extends Generator {
         const packageJSON = fs.readJsonSync(packageJSONPath);
         packageJSON['name'] = this.addonDirectoryName;
         packageJSON['productName'] = this.addonProductName;
-        fs.writeJsonSync(packageJSONPath, packageJSON);
+        fs.writeJsonSync(packageJSONPath, packageJSON, { spaces: 2 });
 
         this._completion('Looking good! Your Local add-on is configured.');
     }
