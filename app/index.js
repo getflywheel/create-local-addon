@@ -109,6 +109,15 @@ class LocalAddonGenerator extends Generator {
         this.env.error('\n' + chalk.red('❌ ERROR: ') + message);
     }
 
+    _printOpeningInstructions() {
+        this.log(chalk.bold('Hello! We are here today to create a new add-on for the Local application. Yay!'));
+        this.log('We are planning to pull down a basic add-on –– just a little something to act as a starting point for your add-on development.');
+        this.log('Then we\'ll do some basic setup: put your files where you want them, make sure Local knows about your add-on, and get you up and running as soon as possible!');
+        this.log('While we work on getting your add-on ready, we\'ll keep you updated on our progress. You can customize the setup a bit if you want! Run ' + chalk.yellowBright('yo create-local-addon --help') + ' to learn more.');
+        this.log('');
+        this.log(chalk.bold('Okay, let\'s get started!'));
+    }
+
     _printFollowupInstructions(addonDirectory, alreadyBuilt) {
         this.log('\n');
         this.log(chalk.green.bold('NEXT STEPS'));
@@ -144,12 +153,7 @@ class LocalAddonGenerator extends Generator {
         if(this.shouldBeVerbose) {
             this.log(ascii);
             this.log(title);
-            this.log(chalk.bold('Hello! We are here today to create a new add-on for the Local application. Yay!'));
-            this.log('We are planning to pull down a basic add-on –– just a little something to act as a starting point for your add-on development.');
-            this.log('Then we\'ll do some basic setup: put your files where you want them, make sure Local knows about your add-on, and get you up and running as soon as possible!');
-            this.log('While we work on getting your add-on ready, we\'ll keep you updated on our progress. You can customize the setup a bit if you want! Run ' + chalk.yellowBright('yo create-local-addon --help') + ' to learn more.');
-            this.log('');
-            this.log(chalk.bold('Okay, let\'s get started!'));
+            this._printOpeningInstructions();
         }
         
         this._info('Checking on your existing Local installations and add-ons...');
