@@ -292,7 +292,7 @@ class LocalAddonGenerator extends Generator {
             this._info('Building dependencies for your add-on...');
             const addonDirectoryPath = path.join(this.targetDirectoryPath, this.addonDirectoryName);
             this.destinationRoot(addonDirectoryPath);
-            this.spawnCommandSync('yarn');
+            this.spawnCommandSync('yarn', this.shouldBeVerbose ? ['--ignore-engines'] : ['--ignore-engines', '--silent']);
             this.spawnCommandSync('yarn', ['build']);
             this._info('Enabling your add-on...');
             enableAddon(this.localApp, this.addonDirectoryName);
