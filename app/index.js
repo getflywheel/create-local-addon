@@ -150,7 +150,10 @@ class LocalAddonGenerator extends Generator {
         } else if(localInstallations.has(apps.localBeta)) {
             this.localApp = apps.localBeta;
         } else {
-            this._error('No installations of Local found! Please install Local at https://localwp.com to create an add-on.');
+            this._error(
+                'No installations of Local found! Please install Local at https://localwp.com before you create an add-on.',
+                new Error('No Local directory found within ' + path.join(os.homedir(), 'Library/Application Support'))
+            );
         }
 
         // check where generator was invoked
