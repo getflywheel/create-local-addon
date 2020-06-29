@@ -163,7 +163,7 @@ class LocalAddonGenerator extends Generator {
         } else {
             this._error(
                 'No installations of Local found! Please install Local at https://localwp.com before you create an add-on.',
-                new Error('No Local directory found: ' + getLocalDirectory(apps.local))
+                new Error('No Local directory found: ' + chalk.cyanBright(getLocalDirectory(apps.local)))
             );
         }
 
@@ -302,7 +302,7 @@ class LocalAddonGenerator extends Generator {
         // confirm success/failure
         this._completion('Your ' + this.localApp + ' add-on has been created and set up successfully.');
         const addonDirectoryPath = path.join(this.targetDirectoryPath, this.addonDirectoryName);
-        this._info('You can find the directory for your newly created add-on at ' + addonDirectoryPath);
+        this._info('You can find the directory for your newly created add-on at ' + chalk.cyanBright(addonDirectoryPath));
         // print next steps, links, etc
         if(!this.shouldBeSilent) {
             this._printFollowupInstructions(addonDirectoryPath, this.shouldEnableAddon);
