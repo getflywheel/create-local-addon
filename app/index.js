@@ -163,7 +163,7 @@ class LocalAddonGenerator extends Generator {
         } else {
             this._error(
                 'No installations of Local found! Please install Local at https://localwp.com before you create an add-on.',
-                new Error('No Local directory found within ' + path.join(os.homedir(), 'Library/Application Support'))
+                new Error('No Local directory found: ' + getLocalDirectory(apps.local))
             );
         }
 
