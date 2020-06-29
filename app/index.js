@@ -136,6 +136,7 @@ class LocalAddonGenerator extends Generator {
         this.log(chalk.green('Making changes to your add-on:'));
         this.log(chalk.greenBright.bold('→ ') + 'You can change your add-on by making changes to the source files:\n');
         this.log('          ' + chalk.cyanBright(path.join(addonDirectoryPath, 'src')));
+        this.log('\n' + chalk.dim('(' + chalk.cyanBright('Boilerplate.jsx') + ' and ' + chalk.cyanBright('renderer.jsx') + ' will have some basic logic in them to give you a starting point, but you\'ll probably want to make some changes.)'));
         if(this.shouldSymlinkAddon) {
             const addonSymlinkPath = path.join(getLocalDirectory(this.localApp), this.addonDirectoryName);
             this.log('\n' + chalk.greenBright.bold('→ ') + 'A symlink pointing to your add-on directory has been made in the Local add-ons directory:\n');
@@ -144,6 +145,7 @@ class LocalAddonGenerator extends Generator {
         this.log('\n' + chalk.greenBright.bold('→ ') + 'Compile, watch add-on source files, and trigger recompilation on change:\n');
         this.log('          ' + chalk.yellowBright('cd ' + addonDirectoryPath));
         this.log('          ' + chalk.yellowBright('yarn build --watch'));
+        this.log('\n' + chalk.dim('(You can leave the ' + chalk.yellowBright('--watch') + ' flag off if you just want to compile your changes once.)'));
         this.log('');
         this.log(chalk.green.bold('NEED SOME HELP?'));
         this.log(chalk.greenBright.bold('→ ') + 'Looking for resources to help you get started with your add-on? Visit ' + chalk.cyan.bold('https://localwp.com/get-involved'));
