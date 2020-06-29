@@ -29,16 +29,16 @@ Usage:
     yo create-local-addon [<productname>] [<directoryname>] [options]
 
 Options:
-            --help            # Print the generator's options and usage
+            --help               # Print the generator's options and usage
 
-            --beta            # Preference to install add-on for Local Beta                                                         Default: false
+            --beta               # Preference to install add-on for Local Beta                                                         Default: false
 
-            --place-directly  # Place add-on directory directly into Local add-ons directory (automatically adds --do-not-symlink)  Default: false
-            --do-not-symlink  # Skip creating a symbolic link in Local add-ons directory to your add-on directory                   Default: false
-            --disable         # Skip building and enabling add-on                                                                   Default: false
+            --place-directly     # Place add-on directory directly into Local add-ons directory (automatically adds --do-not-symlink)  Default: false
+            --do-not-symlink     # Skip creating a symbolic link in Local add-ons directory to your add-on directory                   Default: false
+            --disable            # Skip building and enabling add-on                                                                   Default: false
 
-            --verbsose        # Print error messages on occurrence                                                                  Default: false
-            --silent          # Do not print any logs that are not warnings or errors                                               Default: false
+            --verbose            # Print status updates during the setup process                                                       Default: false
+            --show-error-traces  # Print full error messages on occurrence                                                             Default: false
 
 Arguments:
     productname    # Product/display name for the new add-on     Type: String  Required: false
