@@ -2,7 +2,8 @@ const fs = require('fs-extra');
 const path = require('path');
 const fetch = require('node-fetch');
 const chalk = require('chalk');
-const unzipper = require('unzipper');
+const gunzip = require('gunzip-maybe');
+const tar = require('tar-fs');
 const outdent = require('outdent');
 const Generator = require('yeoman-generator');
 
@@ -62,7 +63,7 @@ class LocalAddonGenerator extends Generator {
         this.existingTargetDirectoryContents = new Set();
         
         // boilerplate add-on information
-        this.addonBoilerplate = 'https://github.com/ethan309/clone-test/archive/master.zip';
+        this.addonBoilerplate = 'https://github.com/ethan309/clone-test/archive/master.tar.gz';
         this.addonBoilerplateArchiveName = 'clone-test-master';
 
         // add-on public and internal names
@@ -298,26 +299,33 @@ class LocalAddonGenerator extends Generator {
         this._info('Pulling down the boilerplate Local add-on to set up...');
 
         // if symlink flag is not used, create add-on directly in Local add-ons directory
-        this.targetDirectoryPath = this.shouldPlaceAddonDirectly ? getLocalDirectory(this.localApp) + '/addons' : this.destinationRoot();
+        this.targetDirectoryPath = this.shouldPlaceAddonDirectly ? path.join(getLocalDirectory(this.localApp), 'addons') : this.destinationRoot();
 
         try {
             // pull down and unpack boilerplate zip archive
             const boilerplate = await fetch(this.addonBoilerplate);
-            await boilerplate.body.pipe(unzipper.Extract({ path: this.targetDirectoryPath })).promise();
+            const archiveName = this.addonBoilerplateArchiveName;
+            const newAddonDirectoryName = this.addonDirectoryName;
+            await new Promise(function(resolve, reject) {
+                boilerplate.body
+                    .pipe(gunzip())
+                    .pipe(tar.extract(`./${newAddonDirectoryName}`, {
+                        map: (originalHeader) => {
+                            const header = { ...originalHeader };
+                            const expression = new RegExp(`${archiveName}/`,);
+
+                            if (header.name.indexOf(`${archiveName}/`) === 0) {
+                                header.name = header.name.replace(expression, '');
+                            }
+
+                            return header;
+                        }
+                    }))
+                    .on('error', reject)
+                    .on('finish', resolve);
+            });
         } catch(error) {
             this._error('There was a problem retrieving the Local add-on boilerplate archive.', error);
-        }
-        
-        try {
-            // rename addon folder
-            fs.renameSync(
-                path.join(this.targetDirectoryPath, this.addonBoilerplateArchiveName),
-                path.join(this.targetDirectoryPath, this.addonDirectoryName)
-            );
-        } catch(error) {
-            // remove unpacked boilerplate archive
-            removeDirectory(path.join(this.targetDirectoryPath, this.addonBoilerplateArchiveName));
-            this._error('There was a problem setting up the Local add-on directory.', error);
         }
 
         this._completion('Success! Your Local add-on directory has been created.');

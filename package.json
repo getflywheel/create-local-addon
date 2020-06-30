@@ -17,9 +17,10 @@
   "license": "ISC",
   "dependencies": {
     "fs-extra": "^9.0.1",
+    "gunzip-maybe": "^1.4.2",
     "node-fetch": "^2.6.0",
     "outdent": "^0.7.1",
-    "unzipper": "^0.10.11",
+    "tar-fs": "^2.1.0",
     "yarn": "^1.22.4",
     "yeoman-generator": "^4.10.1"
   }
