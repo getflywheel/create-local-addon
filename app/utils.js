@@ -13,6 +13,11 @@ const apps = {
     localBeta: 'Local Beta'
 };
 
+/**
+ * recursively removes a directory and all contents within.
+ * 
+ * @param {string} filePath 
+ */
 const removeDirectory = function(filePath) {
     if(!fs.existsSync(filePath))
         return;
@@ -31,13 +36,23 @@ const removeDirectory = function(filePath) {
     fs.rmdirSync(filePath);
 };
 
+/**
+ * constructs a path to the directory for a Local application
+ * 
+ * @param {string} localApp - Local or Local Beta
+ */
 const getLocalDirectory = function(localApp) {
     const platform = os.platform();
     if(platform === platforms.macOS) {
-        return path.join(os.homedir(), 'Library/Application Support', localApp);
+        return path.join(os.homedir(), 'Library', 'Application Support', localApp);
     }
 };
 
+/**
+ * returns a list of all local installations found on the system
+ * 
+ * @returns {Set<string>} Local Installations
+ */
 const confirmLocalInstallations = function() {
     var localInstallations = new Set();
     if(fs.existsSync(getLocalDirectory(apps.local))) {
@@ -49,6 +64,13 @@ const confirmLocalInstallations = function() {
     return localInstallations;
 };
 
+/**
+ * returns a mapping between all add-on directories and the corresponding add-on product name
+ * (for any one Local application)
+ * 
+ * @param {string} localApp - Local or Local Beta
+ * @returns {Map<string, string>} Existing Add-on Directories and Product Names
+ */
 const confirmExistingLocalAddons = function(localApp) {
     var existingAddons = new Map();
     const localAddonsPath = path.join(getLocalDirectory(localApp), 'addons');
@@ -66,20 +88,35 @@ const confirmExistingLocalAddons = function(localApp) {
     return existingAddons;
 };
 
+/**
+ * @param {string} directoryPath 
+ */
 const getDirectoryContents = function(directoryPath) {
     var contents = new Set();
     fs.readdirSync(directoryPath).forEach((file) => contents.add(file));
     return contents;
 }
 
+/**
+ * returns a list of all files within the add-ons directory
+ * (for any one Local application)
+ * 
+ * @param {string} localApp - Local or Local Beta
+ */
 const confirmExistingLocalAddonDirectories = function(localApp) {
-    const localAddonsDirectory = path.join(getLocalDirectory(localApp), '/addons');
+    const localAddonsDirectory = path.join(getLocalDirectory(localApp), 'addons');
     return getDirectoryContents(localAddonsDirectory);
 };
 
+/**
+ * returns a list of the product names for all installed add-ons
+ * (for any one Local application)
+ * 
+ * @param {string} localApp - Local or Local Beta
+ */
 const confirmExistingLocalAddonNames = function(localApp) {
     var existingAddonNames = new Set();
-    const localAddonsPath = getLocalDirectory(localApp) + '/addons';
+    const localAddonsPath = path.join(getLocalDirectory(localApp), 'addons');
     fs.readdirSync(localAddonsPath).forEach((addonDirectory) => {
         const addonDirectoryPath = path.join(localAddonsPath, addonDirectory);
         if(!addonDirectory.startsWith('.') && fs.lstatSync(addonDirectoryPath).isDirectory()) {
@@ -94,6 +131,12 @@ const confirmExistingLocalAddonNames = function(localApp) {
     return existingAddonNames;
 };
 
+/**
+ * enable the add-on with the given name within the given Local application
+ * 
+ * @param {string} localApp - Local or Local Beta
+ * @param {string} addonName - add-on name ('name' property in add-on package.json)
+ */
 const enableAddon = function(localApp, addonName) {
     const enabledAddonsPath = path.join(getLocalDirectory(localApp), 'enabled-addons.json');
     const enabledAddonsJSON = fs.readJsonSync(enabledAddonsPath);

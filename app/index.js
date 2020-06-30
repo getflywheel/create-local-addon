@@ -54,17 +54,21 @@ class LocalAddonGenerator extends Generator {
             default: false
         });
 
+        // local/system information (will be updated during installation)
         this.localApp = 'Local';
         this.existingAddonNames = new Set();
         this.existingAddonDirectories = new Set();
         this.existingTargetDirectoryContents = new Set();
         
+        // boilerplate add-on information
         this.addonBoilerplate = 'https://github.com/ethan309/clone-test/archive/master.zip';
         this.addonBoilerplateArchiveName = 'clone-test-master';
 
+        // add-on public and internal names
         this.addonProductName = this.options['productname'];
         this.addonDirectoryName = this.options['directoryname'];
 
+        // setup preferences
         this.preferLocalBeta = this.options['beta'];
         this.shouldPlaceAddonDirectly = this.options['place-directly'];
         this.shouldSymlinkAddon = !this.options['do-not-symlink'] && !this.shouldPlaceAddonDirectly;
@@ -72,11 +76,23 @@ class LocalAddonGenerator extends Generator {
         this.shouldBeVerbose = this.options['verbose'];
         this.shouldShowFullErrors = this.options['show-error-traces'];
 
+        // add-on installation target path
         this.targetDirectoryPath = this.destinationRoot();
     }
 
-    // PRIVATE METHODS FOR USER INTERACTION
+    // PRIVATE FUNCTIONS FOR USER INTERACTION
 
+    /**
+     * _promptUser() prompts a user and returns their response.
+     * 
+     * @param {Object} promptProperties 
+     * possible properties:
+     * {
+     *     type: 'I am the input type (input, confirm, etc)',
+     *     message: 'I will show to users as the prompt text',
+     *     default: 'default answer'
+     * }
+     */
     async _promptUser(promptProperties) {
         promptProperties.name = 'userResponse';
         const response = await this.prompt(promptProperties);
@@ -95,6 +111,12 @@ class LocalAddonGenerator extends Generator {
         }
     }
 
+    /**
+     * _warn() reports a non-fatal error to the user.
+     * 
+     * @param {string} message 
+     * @param {*} error 
+     */
     _warn(message, error) {
         if(this.shouldShowFullErrors && error !== undefined) {
             this.log(error);
@@ -102,6 +124,12 @@ class LocalAddonGenerator extends Generator {
         this.log('\n' + chalk.red('🚨 WARNING: ') + message);
     }
 
+    /**
+     * _error() reports a fatal error to the user and ends execution.
+     * 
+     * @param {string} message 
+     * @param {*} error 
+     */
     _error(message, error) {
         if(this.shouldShowFullErrors && error !== undefined) {
             this.log(error);
@@ -154,7 +182,12 @@ class LocalAddonGenerator extends Generator {
         this.log('');
     }
 
-    // ORDERED GENERATOR STEPS
+    /**
+     * ORDERED GENERATOR STEPS
+     * 
+     * The generator will always run the following functions in the same order (regardless of their placement).
+     * See https://yeoman.io/authoring/running-context.html for more info.
+     */
 
     initializing() {
         // print greeting, instructions, etc
