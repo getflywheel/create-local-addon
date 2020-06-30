@@ -87,11 +87,9 @@ class LocalAddonGenerator extends Generator {
      * 
      * @param {Object} promptProperties 
      * possible properties:
-     * {
-     *     type: 'I am the input type (input, confirm, etc)',
-     *     message: 'I will show to users as the prompt text',
-     *     default: 'default answer'
-     * }
+     *     - type (string): input type (input, confirm, etc)
+     *     - message (string): prompt text shown to users
+     *     - default (string): default response
      */
     async _promptUser(promptProperties) {
         promptProperties.name = 'userResponse';
