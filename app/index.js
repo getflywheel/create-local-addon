@@ -3,6 +3,7 @@ const path = require('path');
 const fetch = require('node-fetch');
 const chalk = require('chalk');
 const unzipper = require('unzipper');
+const outdent = require('outdent');
 const Generator = require('yeoman-generator');
 
 const { apps, removeDirectory, getLocalDirectory, confirmLocalInstallations, confirmExistingLocalAddonDirectories, getDirectoryContents, confirmExistingLocalAddonNames, enableAddon } = require('./utils');
@@ -136,48 +137,69 @@ class LocalAddonGenerator extends Generator {
     }
 
     _printOpeningInstructions() {
-        this.log(chalk.bold('Hello! We are here today to create a new add-on for the Local application. Yay!'));
-        this.log('We are planning to pull down a basic add-on –– just a little something to act as a starting point for your add-on development.');
-        this.log('Then we\'ll do some basic setup: put your files where you want them, make sure Local knows about your add-on, and get you up and running as soon as possible!');
-        this.log('While we work on getting your add-on ready, we\'ll keep you updated on our progress. You can customize the setup a bit if you want! Run ' + chalk.yellowBright('yo create-local-addon --help') + ' to learn more.');
-        this.log('');
-        this.log(chalk.bold('Okay, let\'s get started!'));
+        this.log(outdent`
+            ${chalk.bold('Hello! We are here today to create a new add-on for the Local application. Yay!')}
+            We are planning to pull down a basic add-on –– just a little something to act as a starting point for your add-on development.
+            Then we\'ll do some basic setup: put your files where you want them, make sure Local knows about your add-on, and get you up and running as soon as possible!
+            While we work on getting your add-on ready, we\'ll keep you updated on our progress. You can customize the setup a bit if you want! Run ${chalk.yellowBright('yo create-local-addon --help')} to learn more.
+            
+            ${chalk.bold('Okay, let\'s get started!')}
+        `);
     }
 
     _printFollowupInstructions() {
         const addonDirectoryPath = path.join(this.targetDirectoryPath, this.addonDirectoryName);
-        this.log('\n');
         this.log(chalk.green.bold('NEXT STEPS'));
         if(!this.shouldEnableAddon) {
-            this.log(chalk.green('Installing and building your add-on\'s dependencies:'));
-            this.log('If you wish to see your add-on displayed in Local and enable it, you must make sure to install/build your add-on\'s dependencies:');
-            this.log('\n' + chalk.greenBright.bold('1. ') + 'Navigate to your add-on directory:\n');
-            this.log('          ' + chalk.yellowBright('cd ' + addonDirectoryPath));
-            this.log('\n' + chalk.greenBright.bold('2. ') + 'Install add-on dependencies:\n');
-            this.log('          ' + chalk.yellowBright('yarn'));
-            this.log('\n' + chalk.greenBright.bold('3. ') + 'Run build script from package.json:\n');
-            this.log('          ' + chalk.yellowBright('yarn build'));
-            this.log('\n' + chalk.greenBright.bold('4. ') + 'Enable your add-on in the Local application.\n');
+            this.log(outdent`
+                ${chalk.green('Installing and building your add-on\'s dependencies:')}
+                If you wish to see your add-on displayed in Local and enable it, you must make sure to install/build your add-on\'s dependencies:
+
+                ${chalk.greenBright.bold('1. ')} Navigate to your add-on directory:
+
+                        ${chalk.yellowBright('cd ' + addonDirectoryPath)}
+
+                ${chalk.greenBright.bold('2. ')} Install add-on dependencies:
+
+                        ${chalk.yellowBright('yarn')}
+
+                ${chalk.greenBright.bold('3. ')} Run build script from package.json:
+
+                        ${chalk.yellowBright('yarn build')}
+
+                ${chalk.greenBright.bold('4. ')} Enable your add-on in the Local application.
+
+            `);
         }
-        this.log(chalk.green('Making changes to your add-on:'));
-        this.log(chalk.greenBright.bold('→ ') + 'You can change your add-on by making changes to the source files:\n');
-        this.log('          ' + chalk.cyanBright(path.join(addonDirectoryPath, 'src')));
-        this.log('\n' + chalk.dim('(' + chalk.cyanBright('Boilerplate.jsx') + ' and ' + chalk.cyanBright('renderer.jsx') + ' will have some basic logic in them to give you a starting point, but you\'ll probably want to make some changes.)'));
         if(this.shouldSymlinkAddon) {
             const addonSymlinkPath = path.join(getLocalDirectory(this.localApp), this.addonDirectoryName);
-            this.log('\n' + chalk.greenBright.bold('→ ') + 'A symlink pointing to your add-on directory has been made in the Local add-ons directory:\n');
-            this.log('          ' + chalk.cyanBright(addonSymlinkPath));
+            this.log(outdent`
+                ${chalk.greenBright.bold('→ ')} A symlink pointing to your add-on directory has been made in the Local add-ons directory:
+
+                        ${chalk.cyanBright(addonSymlinkPath)}
+            `);
         }
-        this.log('\n' + chalk.greenBright.bold('→ ') + 'Compile, watch add-on source files, and trigger recompilation on change:\n');
-        this.log('          ' + chalk.yellowBright('cd ' + addonDirectoryPath));
-        this.log('          ' + chalk.yellowBright('yarn build --watch'));
-        this.log('\n' + chalk.dim('(You can leave the ' + chalk.yellowBright('--watch') + ' flag off if you just want to compile your changes once.)'));
-        this.log('');
-        this.log(chalk.green.bold('NEED SOME HELP?'));
-        this.log(chalk.greenBright.bold('→ ') + 'Looking for resources to help you get started with your add-on? Visit ' + chalk.cyan.bold('https://localwp.com/get-involved'));
-        this.log(chalk.greenBright.bold('→ ') + 'Thinking of submiting your add-on to the Local add-on marketplace? Visit ' + chalk.cyan.bold('https://localwp.com/submit-addon'));
-        this.log('Okay, we\'ll get out of the way and let you start developing! If you have any questions or concerns, try consulting the documentation for Local add-on development.');
-        this.log('');
+        this.log(outdent`
+            ${chalk.green('Making changes to your add-on:')}
+            ${chalk.greenBright.bold('→ ')} You can change your add-on by making changes to the source files:
+
+                    ${chalk.cyanBright(path.join(addonDirectoryPath, 'src'))}
+
+            ${chalk.dim('(' + chalk.cyanBright('Boilerplate.jsx') + ' and ' + chalk.cyanBright('renderer.jsx') + ' will have some basic logic in them to give you a starting point, but you\'ll probably want to make some changes.')}
+
+            ${chalk.greenBright.bold('→ ')} Compile, watch add-on source files, and trigger recompilation on change:
+                
+                    ${chalk.yellowBright('cd ' + addonDirectoryPath)}
+                    ${chalk.yellowBright('yarn build --watch')}
+
+            ${chalk.dim('(You can leave the ' + chalk.yellowBright('--watch') + ' flag off if you just want to compile your changes once.)')}
+
+            ${chalk.green.bold('NEED SOME HELP?')}
+            ${chalk.greenBright.bold('→ ')} Looking for resources to help you get started with your add-on? Visit ${chalk.cyan.bold('https://localwp.com/get-involved')}
+            ${chalk.greenBright.bold('→ ')} Thinking of submiting your add-on to the Local add-on marketplace? Visit ${chalk.cyan.bold('https://localwp.com/submit-addon')}
+            Okay, we\'ll get out of the way and let you start developing! If you have any questions or concerns, try consulting the documentation for Local add-on development.
+    
+        `);
     }
 
     /**
