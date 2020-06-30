@@ -186,7 +186,7 @@ class LocalAddonGenerator extends Generator {
 
                     ${chalk.cyanBright(path.join(addonDirectoryPath, 'src'))}
 
-            ${chalk.dim('(' + chalk.cyanBright('Boilerplate.jsx') + ' and ' + chalk.cyanBright('renderer.jsx') + ' will have some basic logic in them to give you a starting point, but you\'ll probably want to make some changes.')}
+            ${chalk.dim('(' + chalk.cyanBright('Boilerplate.jsx') + ' and ' + chalk.cyanBright('renderer.jsx') + ' will have some basic logic in them to give you a starting point, but you\'ll probably want to make some changes.)')}
 
             ${chalk.greenBright.bold('→ ')} Compile, watch add-on source files, and trigger recompilation on change:
                 

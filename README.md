@@ -5,7 +5,9 @@ So you want to create your own Local add-on? Look no further! This generator can
 
 
 ## Local Add-ons
-Local add-ons...
+Local is even better with add-ons! Add-ons can add extra functionality and convienience to your development workflow. There are some amzing add-ons already available for Local in the add-on marketplace –– but the best add-ons could be the ones you make yourself! This generator is designed to help you can started building your own add-on with little to no effort; it takes care of all the setup and lets you focus on making an amazing new add-on for the Local application.
+
+Once you are done, you can easily use your add-on within Local to enhance your workflow. If you want to go a step further, you can even submit your add-on to be added to the public Local add-on marketplace!
 
 ## Getting Started
 The *Create Local Add-on* generator is designed to get you started with minimal setup. 
@@ -46,9 +48,33 @@ Arguments:
 ```
 
 ## Next Steps
-Next steps...
+#### Making changes to your add-on:
+A symlink pointing to your add-on directory will be been made in the Local add-ons directory, unless you override this preference:
+
+`~/Library/Application Support/Local/my-new-local-addon`
+
+---
+
+After your basic add-on has been created, you can change your add-on by making changes to the source files:
+
+`~/my-new-local-addon/src`
+
+*Boilerplate.jsx and renderer.jsx will have some basic logic in them to give you a starting point, but you'll probably want to make some changes.*
+
+---
+
+You can compile, watch add-on source files, and trigger recompilation on change:
+
+```
+cd /Users/ethanbutt/my-new-local-addon  
+yarn build --watch
+```
+
+*You can leave the --watch flag off if you just want to compile your changes once.*
 
 ## Other Resources
 * [Local Homepage](https://localwp.com/)
+* [Helpful Resources](https://localwp.com/get-involved)
 * [Building a Local Add-on](https://localwp.com/get-involved/build)
 * [Local Add-on API](https://github.com/getflywheel/local-docs-addon-api)
+* [Submit an Add-on to the Local Marketplace](https://localwp.com/submit-addon)
