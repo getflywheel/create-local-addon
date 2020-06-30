@@ -149,7 +149,7 @@ class LocalAddonGenerator extends Generator {
 
     _printFollowupInstructions() {
         const addonDirectoryPath = path.join(this.targetDirectoryPath, this.addonDirectoryName);
-        this.log(chalk.green.bold('NEXT STEPS'));
+        this.log('\n' + chalk.green.bold('NEXT STEPS'));
         if(!this.shouldEnableAddon) {
             this.log(outdent`
                 ${chalk.green('Installing and building your add-on\'s dependencies:')}
@@ -171,16 +171,17 @@ class LocalAddonGenerator extends Generator {
 
             `);
         }
+        this.log(chalk.green('Making changes to your add-on:'));
         if(this.shouldSymlinkAddon) {
             const addonSymlinkPath = path.join(getLocalDirectory(this.localApp), this.addonDirectoryName);
             this.log(outdent`
                 ${chalk.greenBright.bold('→ ')} A symlink pointing to your add-on directory has been made in the Local add-ons directory:
 
                         ${chalk.cyanBright(addonSymlinkPath)}
+                        
             `);
         }
         this.log(outdent`
-            ${chalk.green('Making changes to your add-on:')}
             ${chalk.greenBright.bold('→ ')} You can change your add-on by making changes to the source files:
 
                     ${chalk.cyanBright(path.join(addonDirectoryPath, 'src'))}
