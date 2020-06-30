@@ -168,12 +168,10 @@ class LocalAddonGenerator extends Generator {
 
         // check existing Local installations
         const localInstallations = confirmLocalInstallations();
-        if(this.preferLocalBeta && localInstallations.has(apps.localBeta)) {
-            this.localApp = apps.localBeta;
-        } else if(localInstallations.has(apps.local)) {
-            this.localApp = apps.local;
-        } else if(localInstallations.has(apps.localBeta)) {
-            this.localApp = apps.localBeta;
+        if(localInstallations.size == 2) {  // both applications installed
+            this.localApp = this.preferLocalBeta ? apps.localBeta : apps.local;
+        } else if(localInstallations.size == 1) {  // only Local or Local Beta installed
+            this.localApp = localInstallations.has(apps.local) ? apps.local : apps.localBeta;
         } else {
             this._error(
                 'No installations of Local found! Please install Local at https://localwp.com before you create an add-on.',
