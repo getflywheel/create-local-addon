@@ -174,7 +174,7 @@ class LocalAddonGenerator extends Generator {
         }
         this.log(chalk.green('Making changes to your add-on:'));
         if(this.shouldSymlinkAddon) {
-            const addonSymlinkPath = path.join(getLocalDirectory(this.localApp), this.addonDirectoryName);
+            const addonSymlinkPath = path.join(getLocalDirectory(this.localApp), 'addons', this.addonDirectoryName);
             this.log(outdent`
                 ${chalk.greenBright.bold('→ ')} A symlink pointing to your add-on directory has been made in the Local add-ons directory:
 

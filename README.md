@@ -53,7 +53,7 @@ Here are some tips to help you get started after you have used the generator to 
 ### Making changes to your add-on:
 A symlink pointing to your add-on directory will be been made in the Local add-ons directory, unless you override this preference:
 
-macOS: `~/Library/Application Support/Local/your-new-local-addon`
+macOS: `~/Library/Application Support/Local/addons/your-new-local-addon`
 
 ---
 
