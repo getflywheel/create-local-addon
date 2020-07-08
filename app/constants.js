@@ -63,6 +63,8 @@ Options:
 Arguments:
     productname    # Product/display name for the new add-on     Type: String  Required: false
     directoryname  # Directory/internal name for the new add-on  Type: String  Required: false
+
+You can also consult documentation for more inforamtion: https://github.com/getflywheel/create-local-addon#getting-started
 `
 
 module.exports = { title, ascii, help };

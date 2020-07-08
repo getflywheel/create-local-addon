@@ -8,7 +8,7 @@ const outdent = require('outdent');
 const Generator = require('yeoman-generator');
 
 const { apps, getLocalDirectory, confirmLocalInstallations, confirmExistingLocalAddonDirectories, getDirectoryContents, confirmExistingLocalAddonNames, enableAddon } = require('./utils');
-const { title, ascii } = require('./constants.js');
+const { help, title, ascii } = require('./constants.js');
 
 class LocalAddonGenerator extends Generator {
     constructor(args, opts) {
@@ -25,6 +25,11 @@ class LocalAddonGenerator extends Generator {
             desc: 'Directory/internal name for the new add-on'
         });
 
+        this.option('help', {
+            type: Boolean,
+            desc: 'Print the generator\'s options and usage',
+            default: false
+        });
         this.option('beta', {
             type: Boolean,
             desc: 'Preference to install add-on for Local Beta',
@@ -55,6 +60,12 @@ class LocalAddonGenerator extends Generator {
             desc: 'Print full error messages on occurrence',
             default: false
         });
+
+        // check for help flag before starting
+        if(this.options['help']) {
+            this.log(help);
+            process.exit(0);  // exit early with no error
+        }
 
         // local/system information (will be updated during installation)
         this.localApp = 'Local';
