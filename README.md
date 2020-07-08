@@ -46,6 +46,15 @@ Arguments:
     productname    # Product/display name for the new add-on     Type: String  Required: false
     directoryname  # Directory/internal name for the new add-on  Type: String  Required: false
 ```
+### Examples
+
+The standard installation process looks something like this:
+
+![Standard Installation Process](./docs/standard_installation.gif)
+
+If this is your first time creating a Local add-on or you want more information on the setup process, you may find it helpful to add the `--verbose` flag, like so:
+
+![Verbose Installation Process](./docs/verbose_installation.gif)
 
 ## Next Steps
 Here are some tips to help you get started after you have used the generator to set up your add-on.
