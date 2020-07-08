@@ -60,6 +60,22 @@ The standard installation process looks something like this:
 
 * **Setup Errors**: by default, full traces for errors that occur during installation are silenced. If you want the full trace for errors to be printed into the terminal, you can used the `--show-error-traces` flag. Error traces will be printed just before the associated error or warning message is displayed.
 * **Add-on Names with Spaces**: if you want to create an add-on with spaces in it, you can enclose the name in double-quotes (as a command line argument). These quotes are not necessary if you provide the name to the generator prompt.
+* **Add-on Won't Enable**: there are a few reasons your new add-on may not be enabled automatically.
+	1. 	Make sure you did not set the `--disable` flag (we know, but it doesn't hurt to double check, right?).
+	2. In order to enable your add-on, either the directory for your add-on must be in the local add-ons directory or a symlink must exist in the local add-ons directory pointing to your add-on directory. Therefore, if you use the `--do-not-symlink` flag without adding the `--place-directly` flag, your add-on cannot be enabled automatically.
+	3. By necessity, the generator will use **yarn** to install and build your add-on's dependencies before enabling it. If this process fails, your add-on cannot be enabled. Ensure that the build process was successful; if not, you can look at performing these steps manually (listed below).
+
+#### Building/Enabling Your Add-on Manually
+**Note**: these steps are intended for those who used the `--disable` flag during setup.  
+If you wish to see your add-on displayed in Local and enable it, you must make sure to install/build your add-on's dependencies:
+
+```
+cd ~/.../your-new-local-addon  # navigate to your add-on directory
+yarn  # install add-on dependencies
+yarn build  # Run add-on build script
+```
+
+You should now be able to enable your add-on within the Local application.
 
 ## Next Steps
 Here are some tips to help you get started after you have used the generator to set up your add-on.
