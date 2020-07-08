@@ -14,7 +14,7 @@ The *Create Local Add-on* generator is designed to get you started with minimal 
 
 The only required information you have to supply is **the product name** for your new add-on and **a name for the directory** where the files for your add-on will be placed. You can suppply both of these as command line arguments to the generator; if you do not give one or both in the command line, you will be prompted to supply them.
 
-By default, the generator will pull down a boilerplate add-on, set up this new add-on in your current directory, symlink the add-on into the Local add-ons directory, and enable to add-on within the Local application. You choose to skip each of these default steps by using flags:
+By default, the generator will pull down a basic boilerplate add-on, set up this new add-on in your current directory, symlink the add-on into the Local add-ons directory, and enable the add-on within the Local application. You choose to skip/tweak each of these default steps by using flags:
 
 * using `--place-directly` will place your new add-on directly into the Local add-ons directory (rather than your current directory).
 * using `--do-not-symlink` will not symlink your new add-on into the Local add-ons directory (automatically added if `--place-directly` is used).
@@ -39,7 +39,7 @@ Options:
             --do-not-symlink     # Skip creating a symbolic link in Local add-ons directory to your add-on directory                   Default: false
             --disable            # Skip building and enabling add-on                                                                   Default: false
 
-            --verbose            # Print more detailed information and status updates during the setup process                                                       Default: false
+            --verbose            # Print more detailed information and status updates during the setup process                         Default: false
             --show-error-traces  # Print full error messages on occurrence                                                             Default: false
 
 Arguments:
@@ -51,10 +51,15 @@ Arguments:
 The standard installation process looks something like this:
 
 ![Standard Installation Process](./docs/standard_installation.gif)
-
-If this is your first time creating a Local add-on or you want more information on the setup process, you may find it helpful to add the `--verbose` flag, like so:
+  
+**Verbose Mode**: if this is your first time creating a Local add-on or you want more information on the setup process, you may find it helpful to add the `--verbose` flag (see example below).
 
 ![Verbose Installation Process](./docs/verbose_installation.gif)
+
+## More Help
+
+* **Setup Errors**: by default, full traces for errors that occur during installation are silenced. If you want the full trace for errors to be printed into the terminal, you can used the `--show-error-traces` flag. Error traces will be printed just before the associated error or warning message is displayed.
+* **Add-on Names with Spaces**: if you want to create an add-on with spaces in it, you can enclose the name in double-quotes (as a command line argument). These quotes are not necessary if you provide the name to the generator prompt.
 
 ## Next Steps
 Here are some tips to help you get started after you have used the generator to set up your add-on.
@@ -85,7 +90,7 @@ yarn build --watch
 
 ## Other Resources
 * [Local Homepage](https://localwp.com/)
-* [Helpful Resources](https://localwp.com/get-involved)
+* [Add-on Resources](https://localwp.com/get-involved)
 * [Building a Local Add-on](https://localwp.com/get-involved/build)
 * [Local Add-on API](https://github.com/getflywheel/local-docs-addon-api)
 * [Submit an Add-on to the Local Marketplace](https://localwp.com/submit-addon)
