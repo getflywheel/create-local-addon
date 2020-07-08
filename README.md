@@ -39,7 +39,7 @@ Options:
             --do-not-symlink     # Skip creating a symbolic link in Local add-ons directory to your add-on directory                   Default: false
             --disable            # Skip building and enabling add-on                                                                   Default: false
 
-            --verbose            # Print status updates during the setup process                                                       Default: false
+            --verbose            # Print more detailed information and status updates during the setup process                                                       Default: false
             --show-error-traces  # Print full error messages on occurrence                                                             Default: false
 
 Arguments:

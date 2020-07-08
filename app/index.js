@@ -7,7 +7,7 @@ const tar = require('tar-fs');
 const outdent = require('outdent');
 const Generator = require('yeoman-generator');
 
-const { apps, removeDirectory, getLocalDirectory, confirmLocalInstallations, confirmExistingLocalAddonDirectories, getDirectoryContents, confirmExistingLocalAddonNames, enableAddon } = require('./utils');
+const { apps, getLocalDirectory, confirmLocalInstallations, confirmExistingLocalAddonDirectories, getDirectoryContents, confirmExistingLocalAddonNames, enableAddon } = require('./utils');
 const { title, ascii } = require('./constants.js');
 
 class LocalAddonGenerator extends Generator {
@@ -47,7 +47,7 @@ class LocalAddonGenerator extends Generator {
         });
         this.option('verbose', {
             type: Boolean,
-            desc: 'Print status updates during the setup process',
+            desc: 'Print more detailed information and status updates during the setup process',
             default: false
         });
         this.option('show-error-traces', {
