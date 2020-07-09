@@ -45,6 +45,9 @@ const getLocalDirectory = function(localApp) {
     const platform = os.platform();
     if(platform === platforms.macOS) {
         return path.join(os.homedir(), 'Library', 'Application Support', localApp);
+    } else if(platform = platforms.windows) {
+        // C:\Users\username\AppData\Roaming\Local\addons
+        return path.join(os.homedir(), 'AppData', 'Roaming', localApp);
     }
 };
 
