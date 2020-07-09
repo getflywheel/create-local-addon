@@ -369,10 +369,23 @@ class LocalAddonGenerator extends Generator {
         // enable addon (if needed)
         if(this.shouldEnableAddon) {
             this._info('Building dependencies for your add-on...');
+
+            const previousDirectoryPath = this.destinationRoot();
             const addonDirectoryPath = path.join(this.targetDirectoryPath, this.addonDirectoryName);
             this.destinationRoot(addonDirectoryPath);
-            this.spawnCommandSync('yarn', this.shouldBeVerbose ? ['--ignore-engines'] : ['--ignore-engines', '--silent']);
-            this.spawnCommandSync('yarn', ['build']);
+
+            try {
+                this.spawnCommandSync('yarn', this.shouldBeVerbose ? ['--ignore-engines'] : ['--ignore-engines', '--silent']);
+                this.spawnCommandSync('yarn', ['build']);
+            } catch(error) {
+                this._warn(
+                    'A problem occurred while installing dependencies and building your add-on. Your add-on was still set up successfully, but may not appear within the Local application until you build it yourself. See https://github.com/getflywheel/create-local-addon#buildingenabling-your-add-on-manually for more information.',
+                    error
+                );
+            }
+
+            this.destinationRoot(previousDirectoryPath);
+            
             this._info('Enabling your add-on...');
             enableAddon(this.localApp, this.addonDirectoryName);
         }
