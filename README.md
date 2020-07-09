@@ -77,6 +77,8 @@ yarn build  # Run add-on build script
 
 You should now be able to enable your add-on within the Local application.
 
+![Add-on Window in Local Application](./docs/local-addons_window.png)
+
 ## Next Steps
 Here are some tips to help you get started after you have used the generator to set up your add-on.
 
