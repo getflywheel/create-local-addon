@@ -364,7 +364,10 @@ class LocalAddonGenerator extends Generator {
                     path.join(getLocalDirectory(this.localApp), 'addons', this.addonDirectoryName)
                 );
             } catch(error) {
-                this._error('There was a problem linking your add-on into the Local add-ons directory. The add-on has been created, but may not appear in the Local application.', error);
+                this._error(
+                    `There was a problem linking your add-on into the Local add-ons directory. The add-on has been created, but may not appear in the Local application until you link and build it yourself. See https://github.com/getflywheel/create-local-addon#buildingenabling-your-add-on-manually for more information.\nNew add-on directory: ${path.join(this.targetDirectoryPath, this.addonDirectoryName)}`,
+                    error
+                );
             }
         }
 
