@@ -179,9 +179,11 @@ class LocalAddonGenerator extends Generator {
 
                         ${chalk.yellowBright('yarn build')}
 
-                ${chalk.greenBright.bold('4. ')} Enable your add-on in the Local application.
+                ${chalk.greenBright.bold('4. ')} Enable your add-on in the Local application (you may need to restart Local first if it is already running).
 
             `);
+        } else {
+            this.log('\nIf Local is already running, you may need to restart the application before your add-on will appear.\n');
         }
         this.log(chalk.green('Making changes to your add-on:'));
         if(this.shouldSymlinkAddon) {

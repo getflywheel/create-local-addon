@@ -64,6 +64,7 @@ The standard installation process looks something like this:
 	1. 	Make sure you did not set the `--disable` flag (we know, but it doesn't hurt to double check, right?).
 	2. In order to enable your add-on, either the directory for your add-on must be in the local add-ons directory or a symlink must exist in the local add-ons directory pointing to your add-on directory. Therefore, if you use the `--do-not-symlink` flag without adding the `--place-directly` flag, your add-on cannot be enabled automatically.
 	3. By necessity, the generator will use **yarn** to install and build your add-on's dependencies before enabling it. If this process fails, your add-on cannot be enabled. Ensure that the build process was successful; if not, you can look at performing these steps manually (listed below).
+	4. If Local is already running when you create your add-on, you will need to restart Local to see your add-on appear.
 
 #### Building/Enabling Your Add-on Manually
 **Note**: these steps are intended for those who used the `--disable` flag during setup.  
@@ -81,6 +82,8 @@ You should now be able to enable your add-on within the Local application.
 
 ## Next Steps
 Here are some tips to help you get started after you have used the generator to set up your add-on.
+
+Note: if Local is already running when you create your add-on, you will need to restart Local to see your add-on appear.
 
 ### Making changes to your add-on:
 A symlink pointing to your add-on directory will be been made in the Local add-ons directory, unless you override this preference:
