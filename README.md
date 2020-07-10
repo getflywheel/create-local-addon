@@ -60,6 +60,7 @@ The standard installation process looks something like this:
 
 * **Setup Errors**: by default, full traces for errors that occur during installation are silenced. If you want the full trace for errors to be printed into the terminal, you can used the `--show-error-traces` flag. Error traces will be printed just before the associated error or warning message is displayed.
 * **Add-on Names with Spaces**: if you want to create an add-on with spaces in it, you can enclose the name in double-quotes (as a command line argument). These quotes are not necessary if you provide the name to the generator prompt.
+* **Symlink**: add-on directories must be placed or linked into the Local add-ons directory to appear within the Local appplication. The generator will create a symlink in the Local add-ons directory pointing to your add-on by default; if you skip this step, you will need to link the directory manually.
 * **Add-on Won't Enable**: there are a few reasons your new add-on may not be enabled automatically.
 	1. 	Make sure you did not set the `--disable` flag (we know, but it doesn't hurt to double check, right?).
 	2. In order to enable your add-on, either the directory for your add-on must be in the local add-ons directory or a symlink must exist in the local add-ons directory pointing to your add-on directory. Therefore, if you use the `--do-not-symlink` flag without adding the `--place-directly` flag, your add-on cannot be enabled automatically.
@@ -67,7 +68,7 @@ The standard installation process looks something like this:
 	4. If Local is already running when you create your add-on, you will need to restart Local to see your add-on appear.
 
 #### Building/Enabling Your Add-on Manually
-**Note**: these steps are intended for those who used the `--disable` flag during setup.  
+**Note**: these steps are intended primarily for those who used the `--disable` flag during setup.  
 If you wish to see your add-on displayed in Local and enable it, you must make sure to install/build your add-on's dependencies:
 
 ```
@@ -89,6 +90,7 @@ Note: if Local is already running when you create your add-on, you will need to 
 A symlink pointing to your add-on directory will be been made in the Local add-ons directory, unless you override this preference:
 
 macOS: `~/Library/Application Support/Local/addons/your-new-local-addon`
+Windows: `C:\Users\username\AppData\Roaming\Local\addons`
 
 ---
 
