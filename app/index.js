@@ -10,9 +10,9 @@ const Generator = require('yeoman-generator');
 const { apps, getLocalDirectory, confirmLocalInstallations, confirmExistingLocalAddonDirectories, getDirectoryContents, confirmExistingLocalAddonNames, enableAddon } = require('./utils');
 const { help, title, ascii } = require('./constants.js');
 
-const formatLink = chalk.cyan.bold;
-const formatPath = chalk.cyanBright;
-const formatCommand = chalk.yellowBright;
+const formatLink = chalk.bgBlack.cyan.bold;
+const formatPath = chalk.bgBlack.cyanBright;
+const formatCommand = chalk.bgBlack.yellowBright;
 
 const formatSectionHeader = chalk.green.bold;
 const formatSectionSubheader = chalk.green;
