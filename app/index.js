@@ -10,6 +10,14 @@ const Generator = require('yeoman-generator');
 const { apps, getLocalDirectory, confirmLocalInstallations, confirmExistingLocalAddonDirectories, getDirectoryContents, confirmExistingLocalAddonNames, enableAddon } = require('./utils');
 const { help, title, ascii } = require('./constants.js');
 
+const formatLink = chalk.cyan.bold;
+const formatPath = chalk.cyanBright;
+const formatCommand = chalk.yellowBright;
+
+const formatSectionHeader = chalk.green.bold;
+const formatSectionSubheader = chalk.green;
+const formatLeadIn = chalk.greenBright.bold;
+
 class LocalAddonGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
@@ -154,7 +162,7 @@ class LocalAddonGenerator extends Generator {
             ${chalk.bold('Hello! We are here today to create a new add-on for the Local application. Yay!')}
             We are planning to pull down a basic add-on –– just a little something to act as a starting point for your add-on development.
             Then we\'ll do some basic setup: put your files where you want them, make sure Local knows about your add-on, and get you up and running as soon as possible!
-            ${progressUpdatesText}You can customize the setup a bit if you want! Run ${chalk.yellowBright('yo create-local-addon --help')} to learn more.
+            ${progressUpdatesText}You can customize the setup a bit if you want! Run ${formatCommand('yo create-local-addon --help')} to learn more.
             
             ${chalk.bold('Okay, let\'s get started!')}
         `);
@@ -162,57 +170,57 @@ class LocalAddonGenerator extends Generator {
 
     _printFollowupInstructions() {
         const addonDirectoryPath = path.join(this.targetDirectoryPath, this.addonDirectoryName);
-        this.log('\n' + chalk.green.bold('NEXT STEPS'));
+        this.log('\n' + formatSectionHeader('NEXT STEPS'));
         if(!this.shouldEnableAddon) {
             this.log(outdent`
-                ${chalk.green('Installing and building your add-on\'s dependencies:')}
+                ${formatSectionSubheader('Installing and building your add-on\'s dependencies:')}
                 If you wish to see your add-on displayed in Local and enable it, you must make sure to install/build your add-on\'s dependencies:
 
-                ${chalk.greenBright.bold('1. ')} Navigate to your add-on directory:
+                ${formatLeadIn('1. ')} Navigate to your add-on directory:
 
-                        ${chalk.yellowBright('cd ' + addonDirectoryPath)}
+                        ${formatCommand('cd ' + addonDirectoryPath)}
 
-                ${chalk.greenBright.bold('2. ')} Install add-on dependencies:
+                ${formatLeadIn('2. ')} Install add-on dependencies:
 
-                        ${chalk.yellowBright('yarn')}
+                        ${formatCommand('yarn')}
 
-                ${chalk.greenBright.bold('3. ')} Run build script from package.json:
+                ${formatLeadIn('3. ')} Run build script from package.json:
 
-                        ${chalk.yellowBright('yarn build')}
+                        ${formatCommand('yarn build')}
 
-                ${chalk.greenBright.bold('4. ')} Enable your add-on in the Local application (you may need to restart Local first if it is already running).
+                ${formatLeadIn('4. ')} Enable your add-on in the Local application (you may need to restart Local first if it is already running).
 
             `);
         } else {
             this.log('\nIf Local is already running, you may need to restart the application before your add-on will appear.\n');
         }
-        this.log(chalk.green('Making changes to your add-on:'));
+        this.log(formatSectionSubheader('Making changes to your add-on:'));
         if(this.shouldSymlinkAddon) {
             const addonSymlinkPath = path.join(getLocalDirectory(this.localApp), 'addons', this.addonDirectoryName);
             this.log(outdent`
-                ${chalk.greenBright.bold('→ ')} A symlink pointing to your add-on directory has been made in the Local add-ons directory:
+                ${formatLeadIn('→ ')} A symlink pointing to your add-on directory has been made in the Local add-ons directory:
 
-                        ${chalk.cyanBright(addonSymlinkPath)}
+                        ${formatPath(addonSymlinkPath)}
                         
             `);
         }
         this.log(outdent`
-            ${chalk.greenBright.bold('→ ')} You can change your add-on by making changes to the source files:
+            ${formatLeadIn('→ ')} You can change your add-on by making changes to the source files:
 
-                    ${chalk.cyanBright(path.join(addonDirectoryPath, 'src'))}
+                    ${formatPath(path.join(addonDirectoryPath, 'src'))}
 
-            ${chalk.dim('(' + chalk.cyanBright('Boilerplate.jsx') + ' and ' + chalk.cyanBright('renderer.jsx') + ' will have some basic logic in them to give you a starting point, but you\'ll probably want to make some changes.)')}
+            ${chalk.dim('(' + formatPath('Boilerplate.jsx') + ' and ' + formatPath('renderer.jsx') + ' will have some basic logic in them to give you a starting point, but you\'ll probably want to make some changes.)')}
 
-            ${chalk.greenBright.bold('→ ')} Compile, watch add-on source files, and trigger recompilation on change:
+            ${formatLeadIn('→ ')} Compile, watch add-on source files, and trigger recompilation on change:
                 
-                    ${chalk.yellowBright('cd ' + addonDirectoryPath)}
-                    ${chalk.yellowBright('yarn build --watch')}
+                    ${formatCommand('cd ' + addonDirectoryPath)}
+                    ${formatCommand('yarn build --watch')}
 
-            ${chalk.dim('(You can leave the ' + chalk.yellowBright('--watch') + ' flag off if you just want to compile your changes once.)')}
+            ${chalk.dim('(You can leave the ' + formatCommand('--watch') + ' flag off if you just want to compile your changes once.)')}
 
-            ${chalk.green.bold('NEED SOME HELP?')}
-            ${chalk.greenBright.bold('→ ')} Looking for resources to help you get started with your add-on? Visit ${chalk.cyan.bold('https://localwp.com/get-involved')}
-            ${chalk.greenBright.bold('→ ')} Thinking of submiting your add-on to the Local add-on marketplace? Visit ${chalk.cyan.bold('https://localwp.com/submit-addon')}
+            ${formatSectionHeader('NEED SOME HELP?')}
+            ${formatLeadIn('→ ')} Looking for resources to help you get started with your add-on? Visit ${formatLink('https://localwp.com/get-involved')}
+            ${formatLeadIn('→ ')} Thinking of submiting your add-on to the Local add-on marketplace? Visit ${formatLink('https://localwp.com/submit-addon')}
             Okay, we\'ll get out of the way and let you start developing! If you have any questions or concerns, try consulting the documentation for Local add-on development.
     
         `);
@@ -244,7 +252,7 @@ class LocalAddonGenerator extends Generator {
         } else {
             this._error(
                 'No installations of Local found! Please install Local at https://localwp.com before you create an add-on.',
-                'No Local directory found: ' + chalk.cyanBright(getLocalDirectory(apps.local))
+                'No Local directory found: ' + formatPath(getLocalDirectory(apps.local))
             );
         }
 
