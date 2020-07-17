@@ -12,8 +12,20 @@ Once you are done, you can easily use your add-on within Local to enhance your w
 ## What You'll Need Before Starting
 Here are a few things you'll want to make sure you have set up before using the Local Add-on Generator.
 
-- Node.js
-- Yeoman
+- Node.js ([link to downloads](https://nodejs.org/en/download/))
+
+	Check node installation: `node --version && npm --version`
+	
+	> If you need to upgrade or install Node, the easiest way is to use an installer for your platform. Download the .msi for Windows or .pkg for Mac from the [NodeJS website](https://nodejs.org/).
+
+- NPM ([link to full instructions](https://www.npmjs.com/get-npm))
+
+	> The npm package manager is bundled with Node, although you might need to update it. Some Node versions ship with rather old versions of npm. You can update npm using this command: `npm install --global npm@latest`
+
+- Yeoman ([link to full instructions](https://yeoman.io/codelab/setup.html))
+
+	> Install the Yeoman toolset: `npm install --global yo`  
+	> You can check your yo installation with `yo --version`
 
 
 ## Getting Started
