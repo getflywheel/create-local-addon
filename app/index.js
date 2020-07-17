@@ -149,11 +149,12 @@ class LocalAddonGenerator extends Generator {
     }
 
     _printOpeningInstructions() {
+        const progressUpdatesText = this.shouldBeVerbose ? 'While we work on getting your add-on ready, we\'ll keep you updated on our progress. ' : '';
         this.log(outdent`
             ${chalk.bold('Hello! We are here today to create a new add-on for the Local application. Yay!')}
             We are planning to pull down a basic add-on –– just a little something to act as a starting point for your add-on development.
             Then we\'ll do some basic setup: put your files where you want them, make sure Local knows about your add-on, and get you up and running as soon as possible!
-            While we work on getting your add-on ready, we\'ll keep you updated on our progress. You can customize the setup a bit if you want! Run ${chalk.yellowBright('yo create-local-addon --help')} to learn more.
+            ${progressUpdatesText}You can customize the setup a bit if you want! Run ${chalk.yellowBright('yo create-local-addon --help')} to learn more.
             
             ${chalk.bold('Okay, let\'s get started!')}
         `);
@@ -229,8 +230,8 @@ class LocalAddonGenerator extends Generator {
         if(this.shouldBeVerbose) {
             this.log(ascii);
             this.log(title);
-            this._printOpeningInstructions();
         }
+        this._printOpeningInstructions();
         
         this._info('Checking on your existing Local installations and add-ons...');
 

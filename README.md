@@ -9,6 +9,13 @@ Local is even better with add-ons! Add-ons can add extra functionality and convi
 
 Once you are done, you can easily use your add-on within Local to enhance your workflow. If you want to go a step further, you can even submit your add-on to be added to the public Local add-on marketplace!
 
+## What You'll Need Before Starting
+Here are a few things you'll want to make sure you have set up before using the Local Add-on Generator.
+
+- Node.js
+- Yeoman
+
+
 ## Getting Started
 The *Create Local Add-on* generator is designed to get you started with minimal setup. 
 
