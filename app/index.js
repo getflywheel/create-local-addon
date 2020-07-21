@@ -1,4 +1,5 @@
 const fs = require('fs-extra');
+const os = require('os');
 const path = require('path');
 const fetch = require('node-fetch');
 const chalk = require('chalk');
@@ -7,7 +8,7 @@ const tar = require('tar-fs');
 const outdent = require('outdent');
 const Generator = require('yeoman-generator');
 
-const { apps, getLocalDirectory, confirmLocalInstallations, confirmExistingLocalAddonDirectories, getDirectoryContents, confirmExistingLocalAddonNames, enableAddon } = require('./utils');
+const { apps, platforms, getLocalDirectory, confirmLocalInstallations, confirmExistingLocalAddonDirectories, getDirectoryContents, confirmExistingLocalAddonNames, enableAddon } = require('./utils');
 const { help, title, ascii } = require('./constants.js');
 
 const formatLink = chalk.bgBlack.cyan.bold;
@@ -364,6 +365,7 @@ class LocalAddonGenerator extends Generator {
 
     install() {
         this._info('Setting up your new add-on in the Local application...');
+        var symlinkFailure = false;
 
         // symlink new addon (if needed)
         if(this.shouldSymlinkAddon) {
@@ -373,15 +375,24 @@ class LocalAddonGenerator extends Generator {
                     path.join(getLocalDirectory(this.localApp), 'addons', this.addonDirectoryName)
                 );
             } catch(error) {
-                this._error(
-                    `There was a problem linking your add-on into the Local add-ons directory. The add-on has been created, but may not appear in the Local application until you link and build it yourself. See https://github.com/getflywheel/create-local-addon#buildingenabling-your-add-on-manually for more information.\nNew add-on directory: ${path.join(this.targetDirectoryPath, this.addonDirectoryName)}`,
-                    error
-                );
+                symlinkFailure = true;
+
+                if(os.platform() === platforms.windows) { // Windows system symlink failure
+                    this._warn(
+                        `We will not be able to create a symlink pointing to your add-on within the Local add-ons directory; this can happen when you are using a Windows system that does not support symlinks or the add-on generator has insufficient permissions to create a symlink. We will skip this linking step. See https://github.com/getflywheel/create-local-addon#for-our-windows-users for more information.\n`,
+                        error
+                    );
+                } else { // Non-Windows system symlink failure
+                    this._error(
+                        `There was a problem linking your add-on into the Local add-ons directory. The add-on has been created, but may not appear in the Local application until you link and build it yourself. See https://github.com/getflywheel/create-local-addon#buildingenabling-your-add-on-manually for more information.\nNew add-on directory: ${path.join(this.targetDirectoryPath, this.addonDirectoryName)}`,
+                        error
+                    );
+                }
             }
         }
 
         // enable addon (if needed)
-        if(this.shouldEnableAddon) {
+        if(this.shouldEnableAddon && !symlinkFailure) {
             this._info('Building dependencies for your add-on...');
 
             const previousDirectoryPath = this.destinationRoot();
