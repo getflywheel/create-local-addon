@@ -27,6 +27,9 @@ Here are a few things you'll want to make sure you have set up before using the 
 	> Install the Yeoman toolset: `npm install --global yo`  
 	> You can check your yo installation with `yo --version`
 
+#### For Our Windows Users
+
+The Local Add-on Generator makes use of symlinks to make sure Local knows about your add-on. By default, Windows does not support symlinks; however, there are many different ways to add symlink support to Windows ([Git Bash](https://gitforwindows.org), [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10), etc). If symlinks are not supported by your Windows machine, the Local Add-on Generator will skip that step during setup. Please note that if you do not set the `--place-directly` flag and symlinks are not supported by your machine, your add-on will not be automatically built or enabled within the Local application (you can still perform these steps manually later).
 
 ## Getting Started
 The *Create Local Add-on* generator is designed to get you started with minimal setup. 
