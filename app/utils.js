@@ -44,9 +44,10 @@ const removeDirectory = function(filePath) {
 const getLocalDirectory = function(localApp) {
     const platform = os.platform();
     if(platform === platforms.macOS) {
+        // EXAMPLE: `/Users/username/Library/Application Support/Local`
         return path.join(os.homedir(), 'Library', 'Application Support', localApp);
     } else if(platform === platforms.windows) {
-        // C:\Users\username\AppData\Roaming\Local\addons
+        // EXAMPLE: `C:\Users\username\AppData\Roaming\Local`
         return path.join(os.homedir(), 'AppData', 'Roaming', localApp);
     }
 };
