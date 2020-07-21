@@ -11,9 +11,9 @@ const Generator = require('yeoman-generator');
 const { apps, platforms, getLocalDirectory, confirmLocalInstallations, confirmExistingLocalAddonDirectories, getDirectoryContents, confirmExistingLocalAddonNames, enableAddon } = require('./utils');
 const { help, title, ascii } = require('./constants.js');
 
-const formatLink = chalk.bgBlack.cyan.bold;
-const formatPath = chalk.bgBlack.cyanBright;
-const formatCommand = chalk.bgBlack.yellowBright;
+const formatLink = chalk.blue.bold;
+const formatPath = chalk.blueBright;
+const formatCommand = (command) => chalk.bgBlackBright.yellowBright(` ${command} `);
 
 const formatSectionHeader = chalk.green.bold;
 const formatSectionSubheader = chalk.green;
@@ -121,13 +121,13 @@ class LocalAddonGenerator extends Generator {
 
     _info(message) {
         if(this.shouldBeVerbose) {
-            this.log('\n' + chalk.yellow('🔈 INFO: ') + message);
+            this.log(`\n🔈 ${chalk.magenta('INFO:')} ${message}`);
         }
     }
 
     _completion(message) {
         if(this.shouldBeVerbose) {
-            this.log('\n' + chalk.green('✅ DONE: ') + message);
+            this.log(`\n✅ ${chalk.green('DONE:')} ${message}`);
         }
     }
 
@@ -141,7 +141,7 @@ class LocalAddonGenerator extends Generator {
         if(this.shouldShowFullErrors && error !== undefined) {
             this.log(error);
         }
-        this.log('\n' + chalk.red('🚨 WARNING: ') + message);
+        this.log(`\n🚨 ${chalk.red('WARNING:')} ${message}`);
     }
 
     /**
@@ -154,7 +154,7 @@ class LocalAddonGenerator extends Generator {
         if(this.shouldShowFullErrors && error !== undefined) {
             this.log(error);
         }
-        this.env.error('\n' + chalk.red('❌ ERROR: ') + message);
+        this.log(`\n❌ ${chalk.red('ERROR:')} ${message}`);
     }
 
     _printOpeningInstructions() {
@@ -283,7 +283,7 @@ class LocalAddonGenerator extends Generator {
 
     async prompting() {
         if(this.shouldBeVerbose && (this.addonProductName === undefined || this.addonDirectoryName === undefined)) {
-            this.log('\n' + chalk.cyan('🎤 PROMPTS: ') + 'We need a bit of information before we can create your add-on.');
+            this.log(`\n🎤 ${chalk.blue('PROMPTS:')} We need a bit of information before we can create your add-on.`);
         }
 
         // get addon product name (if needed)
