@@ -15,6 +15,18 @@ const formatLink = chalk.blue.bold;
 const formatPath = chalk.blueBright;
 const formatCommand = (command) => chalk.bgBlackBright.yellowBright(` ${command} `);
 
+const formatCommandBlock = (commands, tabs) => {
+    var lineLength = commands.reduce((longest, command) => Math.max(longest, command.length), 0) + 1;
+    const lineTabs = '\t'.repeat(tabs);
+    const block = commands.reduce((codeBlock, command) => {
+        return outdent`
+            ${codeBlock}
+            ${' ' + lineTabs + command.padEnd(lineLength)}
+        `;
+    }, '');
+    return chalk.bgBlackBright.yellowBright(block);
+};
+
 const formatSectionHeader = chalk.green.bold;
 const formatSectionSubheader = chalk.green;
 const formatLeadIn = chalk.greenBright.bold;
@@ -127,7 +139,7 @@ class LocalAddonGenerator extends Generator {
 
     _completion(message) {
         if(this.shouldBeVerbose) {
-            this.log(`\n✅ ${chalk.green('DONE:')} ${message}`);
+            this.log(`\n✅ ${chalk.green.bold('DONE:')} ${message}`);
         }
     }
 
@@ -213,9 +225,7 @@ class LocalAddonGenerator extends Generator {
             ${chalk.dim('(' + formatPath('Boilerplate.jsx') + ' and ' + formatPath('renderer.jsx') + ' will have some basic logic in them to give you a starting point, but you\'ll probably want to make some changes.)')}
 
             ${formatLeadIn('→ ')} Compile, watch add-on source files, and trigger recompilation on change:
-                
-                    ${formatCommand('cd ' + addonDirectoryPath)}
-                    ${formatCommand('yarn build --watch')}
+                    ${formatCommandBlock(['cd ' + addonDirectoryPath, 'yarn build --watch'], 1)}
 
             ${chalk.dim('(You can leave the ' + formatCommand('--watch') + ' flag off if you just want to compile your changes once.)')}
 
