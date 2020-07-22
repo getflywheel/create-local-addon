@@ -49,6 +49,9 @@ const getLocalDirectory = function(localApp) {
     } else if(platform === platforms.windows) {
         // EXAMPLE: `C:\Users\username\AppData\Roaming\Local`
         return path.join(os.homedir(), 'AppData', 'Roaming', localApp);
+    } else if(platform === platforms.linux) {
+        // EXAMPLE: `/home/username/.config/Local`
+        return path.join(os.homedir(), '.config', localApp);
     }
 };
 
