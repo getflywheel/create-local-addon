@@ -332,6 +332,7 @@ class LocalAddonGenerator extends Generator {
 
         // if symlink flag is not used, create add-on directly in Local add-ons directory
         this.targetDirectoryPath = this.shouldPlaceAddonDirectly ? path.join(getLocalDirectory(this.localApp), 'addons') : this.destinationRoot();
+        this.destinationRoot(this.targetDirectoryPath);
 
         try {
             // pull down and unpack boilerplate zip archive
