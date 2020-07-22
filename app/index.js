@@ -14,17 +14,16 @@ const { help, title, ascii } = require('./constants.js');
 const formatLink = chalk.blue.bold;
 const formatPath = chalk.blueBright;
 const formatCommand = (command) => chalk.bgBlackBright.yellowBright(` ${command} `);
-
 const formatCommandBlock = (commands, tabs) => {
     var lineLength = commands.reduce((longest, command) => Math.max(longest, command.length), 0) + 1;
     const lineTabs = '\t'.repeat(tabs);
     const block = commands.reduce((codeBlock, command) => {
         return outdent`
             ${codeBlock}
-            ${' ' + lineTabs + command.padEnd(lineLength)}
+            ${lineTabs + chalk.bgBlackBright.yellowBright(' ' + command.padEnd(lineLength))}
         `;
     }, '');
-    return chalk.bgBlackBright.yellowBright(block);
+    return block;
 };
 
 const formatSectionHeader = chalk.green.bold;
