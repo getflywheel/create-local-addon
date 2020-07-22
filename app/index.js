@@ -165,7 +165,7 @@ class LocalAddonGenerator extends Generator {
         if(this.shouldShowFullErrors && error !== undefined) {
             this.log(error);
         }
-        this.log(`\n❌ ${chalk.red('ERROR:')} ${message}`);
+        this.env.error(`\n❌ ${chalk.red('ERROR:')} ${message}`);
     }
 
     _printOpeningInstructions() {
