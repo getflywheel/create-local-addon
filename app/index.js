@@ -8,7 +8,16 @@ const tar = require('tar-fs');
 const outdent = require('outdent');
 const Generator = require('yeoman-generator');
 
-const { apps, platforms, getLocalDirectory, confirmLocalInstallations, confirmExistingLocalAddonDirectories, getDirectoryContents, confirmExistingLocalAddonNames, enableAddon } = require('./utils');
+const {
+    apps,
+    platforms,
+    getLocalDirectory,
+    confirmLocalInstallations,
+    confirmExistingLocalAddonDirectories,
+    getDirectoryContents,
+    confirmExistingLocalAddonNames,
+    enableAddon
+} = require('./utils');
 const { help, title, ascii } = require('./constants.js');
 
 const formatLink = chalk.blue.bold;
