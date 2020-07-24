@@ -98,8 +98,9 @@ Add-on directories must be placed or linked into the Local add-ons directory to 
 
 **Local add-on directories:**
 
-- macOS: `~/Library/Application Support/Local/addons/your-new-local-addon`
+- macOS: `~/Library/Application Support/Local/addons`
 - Windows: `C:\Users\username\AppData\Roaming\Local\addons`
+- Debian Linux: `~/.config/Local/addons`
 
 #### Building/Enabling Your Add-on Manually
 **Note**: these steps are intended primarily for those who used the `--disable` flag during setup.  
