@@ -1,4 +1,5 @@
 const chalk = require('chalk');
+const outdent = require('outdent');
 
 const formatLink = chalk.blue.bold;
 const formatPath = chalk.blueBright;
