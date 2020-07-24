@@ -364,11 +364,19 @@ class LocalAddonGenerator extends Generator {
         this._completion('Success! Your Local add-on directory has been created.');
         this._info('Initializing your add-on with your information...');
         
-        const packageJSONPath = path.join(this.targetDirectoryPath, this.addonDirectoryName, 'package.json');
-        const packageJSON = fs.readJsonSync(packageJSONPath);
-        packageJSON['name'] = this.addonDirectoryName;
-        packageJSON['productName'] = this.addonProductName;
-        fs.writeJsonSync(packageJSONPath, packageJSON, { spaces: 2 });
+        try {
+            const packageJSONPath = path.join(this.targetDirectoryPath, this.addonDirectoryName, 'package.json');
+            const packageJSON = fs.readJsonSync(packageJSONPath);
+            packageJSON['name'] = this.addonDirectoryName;
+            packageJSON['slug'] = this.addonDirectoryName;
+            packageJSON['productName'] = this.addonProductName;
+            fs.writeJsonSync(packageJSONPath, packageJSON, { spaces: 2 });
+        } catch(error) {
+            this._error(
+                'There was a problem setting up your add-on with the information you provided. This can happen when there is a mismatch between the boilerplate add-on we pull down and what the generator expects; make sure you have the most up-to-date version of this generator and try again.',
+                error
+            );
+        }
 
         this._completion('Looking good! Your Local add-on is configured.');
     }
