@@ -193,11 +193,11 @@ class LocalAddonGenerator extends Generator {
 
                 ${formatLeadIn('2. ')} Install add-on dependencies:
 
-                        ${formatCommand('yarn')}
+                        ${formatCommand('npm install')}
 
                 ${formatLeadIn('3. ')} Run build script from package.json:
 
-                        ${formatCommand('yarn build')}
+                        ${formatCommand('npm run build')}
 
                 ${formatLeadIn('4. ')} Enable your add-on in the Local application (you will need to restart Local first if it is already running).
 
@@ -223,7 +223,7 @@ class LocalAddonGenerator extends Generator {
             ${chalk.dim('(' + formatPath('Boilerplate.jsx') + ' and ' + formatPath('renderer.jsx') + ' will have some basic logic in them to give you a starting point, but you\'ll probably want to make some changes.)')}
 
             ${formatLeadIn('→ ')} Compile, watch add-on source files, and trigger recompilation on change:
-                    ${formatCommandBlock(['cd ' + addonDirectoryPath, 'yarn build --watch'], 1)}
+                    ${formatCommandBlock(['cd ' + addonDirectoryPath, 'npm run build --watch'], 1)}
 
             ${chalk.dim('(You can leave the ' + formatCommand('--watch') + ' flag off if you just want to compile your changes once.)')}
 
