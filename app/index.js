@@ -199,11 +199,11 @@ class LocalAddonGenerator extends Generator {
 
                         ${formatCommand('yarn build')}
 
-                ${formatLeadIn('4. ')} Enable your add-on in the Local application (you may need to restart Local first if it is already running).
+                ${formatLeadIn('4. ')} Enable your add-on in the Local application (you will need to restart Local first if it is already running).
 
             `);
         } else {
-            this.log('\nIf Local is already running, you may need to restart the application before your add-on will appear.\n');
+            this.log('\nIf Local is already running, you will need to restart the application in order for your add-on will appear.\n');
         }
         this.log(formatSectionSubheader('Making changes to your add-on:'));
         if(this.shouldSymlinkAddon) {
