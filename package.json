@@ -1,5 +1,5 @@
 {
-  "name": "generator-create-local-addon",
+  "name": "create-local-addon",
   "version": "0.0.1",
   "description": "A generator for local add-ons.",
   "main": "index.js",
