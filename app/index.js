@@ -418,7 +418,7 @@ class LocalAddonGenerator extends Generator {
 
             try {
                 const installer = 'npm'; // or 'yarn'
-                this.spawnCommandSync(installer, (this.shouldBeVerbose) ? ['install'] : ['install', '--silent']); // add '--ignore-engines' if using yarn
+                this.spawnCommandSync(installer, ['install', '--quiet']); // use ['install', '--silent', '--ignore-engines'] if using yarn
                 this.spawnCommandSync(installer, ['run', 'build']);
             } catch(error) {
                 this._warn(
