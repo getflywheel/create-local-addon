@@ -48,6 +48,7 @@ Run the Local Add-on Generator:
 ```
 create-local-addon --verbose
 ```
+---
 
 You can also run the generator using `npx`:
 

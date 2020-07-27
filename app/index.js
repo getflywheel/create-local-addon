@@ -173,7 +173,7 @@ class LocalAddonGenerator extends Generator {
             ${chalk.bold('Hello! We are here today to create a new add-on for the Local application. Yay!')}
             We are planning to pull down a basic add-on –– just a little something to act as a starting point for your add-on development.
             Then we\'ll do some basic setup: put your files where you want them, make sure Local knows about your add-on, and get you up and running as soon as possible!
-            ${progressUpdatesText}You can customize the setup a bit if you want! Run ${formatCommand('yo create-local-addon --help')} to learn more.
+            ${progressUpdatesText}You can customize the setup a bit if you want! Run ${formatCommand('create-local-addon --help')} to learn more.
             
             ${chalk.bold('Okay, let\'s get started!')}
         `);
