@@ -37,6 +37,25 @@ The Local Add-on Generator makes use of symlinks to make sure Local knows about 
 **Note**: if you do not set the `--place-directly` flag and symlinks are not supported by your machine, your add-on will not be automatically built or enabled within the Local application (you can still perform these steps manually later).
 
 ## Getting Started
+Install the Local Add-on Generator:
+
+```
+npm install create-local-addon
+```
+
+Run the Local Add-on Generator:
+
+```
+create-local-addon --verbose
+```
+
+You can also run the generator using `npx`:
+
+```
+npx create-local-addon --verbose
+```
+
+## Usage
 The *Create Local Add-on* generator is designed to get you started with minimal setup. 
 
 The only required information you have to supply is **the product name** for your new add-on and **a name for the directory** where the files for your add-on will be placed. You can suppply both of these as command line arguments to the generator; if you do not give one or both in the command line, you will be prompted to supply them.
