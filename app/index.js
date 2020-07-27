@@ -295,7 +295,7 @@ class LocalAddonGenerator extends Generator {
         }
 
         // get addon product name (if needed)
-        if(this.addonProductName === undefined) {
+        if(this.addonProductName === undefined || this.addonProductName.length === 0) {
             this.addonProductName = await this._promptUser({
                 type: 'input',
                 message: 'What is the name of your addon? This will be shown to users.',
@@ -304,7 +304,7 @@ class LocalAddonGenerator extends Generator {
         }
 
         // get addon directory name (if needed)
-        if(this.addonDirectoryName === undefined) {
+        if(this.addonDirectoryName === undefined || this.addonDirectoryName.length === 0) {
             this.addonDirectoryName = await this._promptUser({
                 type: 'input',
                 message: 'We would like to make a directory for your add-on. What would you like to name this directory?',
