@@ -90,7 +90,7 @@ The standard installation process looks something like this:
 * **Add-on Won't Enable**: there are a few reasons your new add-on may not be enabled automatically.
 	1. 	Make sure you did not set the `--disable` flag (we know, but it doesn't hurt to double check, right?).
 	2. In order to enable your add-on, either the directory for your add-on must be in the local add-ons directory or a symlink must exist in the local add-ons directory pointing to your add-on directory. Therefore, if you use the `--do-not-symlink` flag without adding the `--place-directly` flag, your add-on cannot be enabled automatically.
-	3. By necessity, the generator will use **yarn** to install and build your add-on's dependencies before enabling it. If this process fails, your add-on cannot be enabled. Ensure that the build process was successful; if not, you can look at performing these steps manually (listed below).
+	3. By necessity, the generator will use **npm** to install and build your add-on's dependencies before enabling it (you can also use **yarn**). If this process fails, your add-on cannot be enabled. Ensure that the build process was successful; if not, you can look at performing these steps manually (listed below).
 	4. If Local is already running when you create your add-on, you will need to restart Local to see your add-on appear.
 
 #### Local Add-on Directory
@@ -105,6 +105,14 @@ Add-on directories must be placed or linked into the Local add-ons directory to 
 #### Building/Enabling Your Add-on Manually
 **Note**: these steps are intended primarily for those who used the `--disable` flag during setup.  
 If you wish to see your add-on displayed in Local and enable it, you must make sure to install/build your add-on's dependencies:
+
+```
+cd ~/.../your-new-local-addon  # navigate to your add-on directory
+npm install  # install add-on dependencies
+npm run build  # Run add-on build script
+```
+
+Or using **yarn**:
 
 ```
 cd ~/.../your-new-local-addon  # navigate to your add-on directory
@@ -131,6 +139,13 @@ After your basic add-on has been created, you can change your add-on by making c
 ---
 
 You can compile, watch add-on source files, and trigger recompilation on change:
+
+```
+cd ~/.../your-new-local-addon  
+npmn run build --watch
+```
+
+Or using **yarn**:
 
 ```
 cd ~/.../your-new-local-addon  
