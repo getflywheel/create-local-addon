@@ -93,8 +93,8 @@ class LocalAddonGenerator extends Generator {
         this.existingTargetDirectoryContents = new Set();
         
         // boilerplate add-on information
-        this.addonBoilerplate = 'https://github.com/ethan309/clone-test/archive/master.tar.gz';
-        this.addonBoilerplateArchiveName = 'clone-test-master';
+        this.addonBoilerplate = 'https://github.com/getflywheel/local-addon-boilerplate/archive/master.tar.gz';
+        this.addonBoilerplateArchiveName = 'local-addon-boilerplate-master';
 
         // add-on public and internal names
         this.addonProductName = this.options['productname'];
