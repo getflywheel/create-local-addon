@@ -8,13 +8,21 @@
   },
   "files": [
     "app",
-    "router"
+    "router",
+    "docs"
   ],
   "keywords": [
+    "Local",
+    "WordPress",
     "yeoman-generator"
   ],
-  "author": "Ethan Bütt",
-  "license": "ISC",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/getflywheel/create-local-addon"
+  },
+  "homepage": "https://build.localwp.com",
+  "author": "Local Team <local-dev@getflywheel.com>",
+  "license": "MIT",
   "dependencies": {
     "fs-extra": "^9.0.1",
     "gunzip-maybe": "^1.4.2",
