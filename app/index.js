@@ -204,7 +204,7 @@ class LocalAddonGenerator extends Generator {
 
             `);
         } else {
-            this.log('\nIf Local is already running, you will need to restart the application in order for your add-on will appear.\n');
+            this.log('\nIf Local is already running, you will need to restart the application in order for your add-on to appear.\n');
         }
         this.log(formatSectionSubheader('Making changes to your add-on:'));
         if(this.shouldSymlinkAddon) {
