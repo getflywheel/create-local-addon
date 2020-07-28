@@ -98,7 +98,7 @@ class LocalAddonGenerator extends Generator {
 
         // add-on public and internal names
         this.addonProductName = this.options['productname'];
-        this.addonDirectoryName = this.options['directoryname'];
+        this.addonDirectoryName = this.options['directoryname'].replace(/\s+/g, '-'); // cannot contain spaces
 
         // setup preferences
         this.preferLocalBeta = this.options['beta'];
@@ -319,11 +319,12 @@ class LocalAddonGenerator extends Generator {
             || this.existingAddonDirectories.has(this.addonDirectoryName)
             || this.existingTargetDirectoryContents.has(this.addonDirectoryName)
         ) {
-            this.addonDirectoryName = await this._promptUser({
+            const submittedAddonDirectoryName = await this._promptUser({
                 type: 'input',
                 message: 'An add-on or directory with the name ' + this.addonDirectoryName + ' already exists. Please choose another.',
                 default: this.addonProductName.toLowerCase().replace(/\s+/g, '-')
             });
+            this.addonDirectoryName = submittedAddonDirectoryName.replace(/\s+/g, '-');
         }
     }
 
