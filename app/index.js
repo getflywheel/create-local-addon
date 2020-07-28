@@ -98,7 +98,7 @@ class LocalAddonGenerator extends Generator {
 
         // add-on public and internal names
         this.addonProductName = this.options['productname'];
-        this.addonDirectoryName = this.options['directoryname'].replace(/\s+/g, '-'); // cannot contain spaces
+        this.addonDirectoryName = this.options['directoryname'] !== undefined ? this._formatDirectoryName(this.options['directoryname']) : undefined;
 
         // setup preferences
         this.preferLocalBeta = this.options['beta'];
@@ -166,6 +166,16 @@ class LocalAddonGenerator extends Generator {
         }
         this.log(`\n❌ ${chalk.red('ERROR:')} ${message}`);
         this.env.error(`create-local-addon error: ${message}`);
+    }
+
+    _formatDirectoryName(addonDirectoryName) {
+        this.log(`BEFORE: ${addonDirectoryName}`);
+        const formattedAddonName = addonDirectoryName.replace(/\s+/g, '-');
+        this.log(`AFTER: ${formattedAddonName}`);
+        if(formattedAddonName !== addonDirectoryName) {
+            this._warn(`The entered directory name ${addonDirectoryName} contains spaces (not allowed). These invalid characters have been replaced with dashes.`);
+        }
+        return formattedAddonName;
     }
 
     _printOpeningInstructions() {
@@ -311,6 +321,7 @@ class LocalAddonGenerator extends Generator {
                 message: 'We would like to make a directory for your add-on. What would you like to name this directory?',
                 default: this.addonProductName.toLowerCase().replace(/\s+/g, '-')
             });
+            this.addonDirectoryName = this._formatDirectoryName(this.addonDirectoryName);
         }
         
         // confirm directory name availability
@@ -319,12 +330,12 @@ class LocalAddonGenerator extends Generator {
             || this.existingAddonDirectories.has(this.addonDirectoryName)
             || this.existingTargetDirectoryContents.has(this.addonDirectoryName)
         ) {
-            const submittedAddonDirectoryName = await this._promptUser({
+            this.addonDirectoryName = await this._promptUser({
                 type: 'input',
                 message: 'An add-on or directory with the name ' + this.addonDirectoryName + ' already exists. Please choose another.',
                 default: this.addonProductName.toLowerCase().replace(/\s+/g, '-')
             });
-            this.addonDirectoryName = submittedAddonDirectoryName.replace(/\s+/g, '-');
+            this.addonDirectoryName = this._formatDirectoryName(this.addonDirectoryName);
         }
     }
 
