@@ -169,9 +169,7 @@ class LocalAddonGenerator extends Generator {
     }
 
     _formatDirectoryName(addonDirectoryName) {
-        this.log(`BEFORE: ${addonDirectoryName}`);
         const formattedAddonName = addonDirectoryName.replace(/\s+/g, '-');
-        this.log(`AFTER: ${formattedAddonName}`);
         if(formattedAddonName !== addonDirectoryName) {
             this._warn(`The entered directory name ${addonDirectoryName} contains spaces (not allowed). These invalid characters have been replaced with dashes.`);
         }
