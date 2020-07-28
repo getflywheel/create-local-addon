@@ -9,7 +9,8 @@ So you want to create your own Local add-on? Look no further! This generator can
 ## Local Add-ons
 Local is even better with add-ons! Add-ons can add extra functionality and convienience to your development workflow. There are some amazing add-ons already available for Local in the add-on marketplace –– but the best add-ons could be the ones you make yourself! This generator is designed to help you get started building your own add-on with little effort; it takes care of all the setup and lets you focus on making an amazing new add-on for the Local application.
 
-Once you are done, you can easily use your add-on within Local to enhance your workflow. If you want to go a step further, you can even submit your add-on to be added to the public Local add-on marketplace!
+Once you are done, you can easily use your add-on within Local to enhance your workflow. If you want to go a step further, you can even submit your add-on to be added to the public Local add-on marketplace! 
+Learn more at [http://build.localwp.com](http://build.localwp.com/).
 
 ## What You'll Need Before Starting
 Here are a few things you'll want to make sure you have set up before using the Local Add-on Generator.
