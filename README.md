@@ -31,20 +31,7 @@ The Local Add-on Generator makes use of symlinks to make sure Local knows about 
 **Note**: if you do not set the `--place-directly` flag and symlinks are not supported by your machine, your add-on will not be automatically built or enabled within the Local application (you can still perform these steps manually later).
 
 ## Getting Started
-Install the Local Add-on Generator:
-
-```
-npm install create-local-addon
-```
-
-Run the Local Add-on Generator:
-
-```
-create-local-addon --verbose
-```
----
-
-You can also run the generator using `npx`:
+Run the generator using `npx`:
 
 ```
 npx create-local-addon --verbose
@@ -136,7 +123,7 @@ yarn build  # Run add-on build script
 
 You should now be able to enable your add-on within the Local application.
 
-![Add-on Window in Local Application](./docs/local-addons_window.png)
+![Add-on Window in Local Application](./docs/local_addons_window.png)
 
 ## Next Steps
 Here are some tips to help you get started after you have used the generator to set up your add-on.
