@@ -46,7 +46,7 @@ const ascii = chalk.green.bold(`
 
 const help = `
 Usage:
-    yo create-local-addon [<productname>] [<directoryname>] [options]
+    npx create-local-addon [<productname>] [<directoryname>] [options]
 
 Options:
             --help               # Print the generator's options and usage

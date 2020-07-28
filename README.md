@@ -24,12 +24,6 @@ Here are a few things you'll want to make sure you have set up before using the 
 
 	> The npm package manager is bundled with Node, although you might need to update it. Some Node versions ship with rather old versions of npm. You can update npm using this command: `npm install --global npm@latest`
 
-- Yeoman ([link to full instructions](https://yeoman.io/codelab/setup.html))
-
-	Check yo installation: `yo --version`
-
-	> Install the Yeoman toolset: `npm install --global yo`  
-
 #### For Our Windows Users
 
 The Local Add-on Generator makes use of symlinks to make sure Local knows about your add-on. By default, your Windows machine may not support symlinks; however, there are many different ways to add symlink support to Windows ([Git Bash](https://gitforwindows.org), [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10), etc). If symlinks are not supported by your Windows machine, the Local Add-on Generator will skip that step during setup. Alternatively, the Local Add-on Generator could be operating with insufficient permissions to create a symlink, which will result in the same outcome as with a lack of symlink support. We are actively working to improve this part of the add-on setup process.  
@@ -75,7 +69,7 @@ Note: if you use the `--beta` flag, but no installation of Local Beta is found, 
 
 ```
 Usage:
-    yo create-local-addon [<productname>] [<directoryname>] [options]
+    npx create-local-addon [<productname>] [<directoryname>] [options]
 
 Options:
             --help               # Print the generator's options and usage
