@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/create-local-addon.svg)](https://badge.fury.io/js/create-local-addon)
+
 # Create Local Add-on
 A generator to assist in the development of new Local add-ons. Generates a basic add-on to act as a starting point for development.
 
