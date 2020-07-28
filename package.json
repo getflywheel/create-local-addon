@@ -1,6 +1,6 @@
 {
   "name": "create-local-addon",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A generator for local add-ons.",
   "main": "index.js",
   "scripts": {
@@ -17,8 +17,8 @@
     "yeoman-generator"
   ],
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/getflywheel/create-local-addon"
+    "type": "git",
+    "url": "https://github.com/getflywheel/create-local-addon"
   },
   "homepage": "https://build.localwp.com",
   "author": "Local Team <local-dev@getflywheel.com>",
