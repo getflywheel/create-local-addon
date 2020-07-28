@@ -39,6 +39,7 @@ Run the generator using `npx`:
 ```
 npx create-local-addon --verbose
 ```
+([npx](https://www.npmjs.com/package/npx) should be included with `npm` 5.2+ and higher)
 
 ## Usage
 The *Create Local Add-on* generator is designed to get you started with minimal setup. 
