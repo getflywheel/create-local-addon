@@ -110,6 +110,9 @@ class LocalAddonGenerator extends Generator {
 
         // add-on installation target path
         this.targetDirectoryPath = this.destinationRoot();
+
+        // ANALYTICS: report preferences? Could give insight into if a certain default is always being overwritten or flag being used.
+        // ANALYTICS: report system info? Could give insight into users (Example: Windows dominant user base? -> focus more on symlink alternative.)
     }
 
     // PRIVATE FUNCTIONS FOR USER INTERACTION
@@ -161,6 +164,8 @@ class LocalAddonGenerator extends Generator {
      * @param {*} error 
      */
     _error(message, error) {
+        // ANALYTICS: report error.
+
         if(this.shouldShowFullErrors && error !== undefined) {
             this.log(error);
         }
@@ -256,6 +261,10 @@ class LocalAddonGenerator extends Generator {
             this.log(ascii);
             this.log(title);
         }
+        // ANALYTICS: prompt for permissions.
+
+        // ANALYTICS: report invocation.
+
         this._printOpeningInstructions();
         
         this._info('Checking on your existing Local installations and add-ons...');
@@ -450,6 +459,7 @@ class LocalAddonGenerator extends Generator {
         this._completion('Your ' + this.localApp + ' add-on has been created and set up successfully.');
         // print next steps, links, etc
         this._printFollowupInstructions();
+        // ANALYTICS: report success/failure.
     }
 }
 
