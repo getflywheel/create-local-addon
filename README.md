@@ -39,12 +39,12 @@ Run the generator using `npx`:
 ```
 npx create-local-addon --verbose
 ```
-([npx](https://www.npmjs.com/package/npx) should be included with `npm` 5.2+ and higher)
+([npx](https://www.npmjs.com/package/npx) should be included with `npm` 5.2 and higher)
 
 ## Usage
 The *Create Local Add-on* generator is designed to get you started with minimal setup. 
 
-The only required information you have to supply is **the product name** for your new add-on and **a name for the directory** where the files for your add-on will be placed. You can suppply both of these as command line arguments to the generator; if you do not give one or both in the command line, you will be prompted to supply them.
+The only required information you have to supply is **the product name** for your new add-on and **a name for the directory** where the files for your add-on will be placed. You can supply both of these as command-line arguments to the generator; if you do not give one or both in the command line, you will be prompted to supply them.
 
 By default, the generator will pull down a basic boilerplate add-on, set up this new add-on in your current directory, symlink the add-on into the Local add-ons directory, and enable the add-on within the Local application. You choose to skip/tweak each of these default steps by using flags:
 
@@ -90,16 +90,16 @@ The standard installation process looks something like this:
 
 ## More Help
 
-* **Setup Errors**: by default, full traces for errors that occur during installation are silenced. If you want the full trace for errors to be printed into the terminal, you can used the `--show-error-traces` flag. Error traces will be printed just before the associated error or warning message is displayed.
-* **Add-on Names with Spaces**: if you want to create an add-on with spaces in it, you can enclose the name in double-quotes (as a command line argument). These quotes are not necessary if you provide the name to the generator prompt.
+* **Setup Errors**: by default, full traces for errors that occur during installation are silenced. If you want the full trace for errors to be printed into the terminal, you can use the `--show-error-traces` flag. Error traces will be printed just before the associated error or warning message is displayed.
+* **Add-on Names with Spaces**: if you want to create an add-on with spaces in it, you can enclose the name in double-quotes (as a command-line argument). These quotes are not necessary if you provide the name to the generator prompt.
 * **Add-on Won't Enable**: there are a few reasons your new add-on may not be enabled automatically.
-	1. 	Make sure you did not set the `--disable` flag (we know, but it doesn't hurt to double check, right?).
+	1. 	Make sure you did not set the `--disable` flag (we know, but it doesn't hurt to double-check, right?).
 	2. In order to enable your add-on, either the directory for your add-on must be in the local add-ons directory or a symlink must exist in the local add-ons directory pointing to your add-on directory. Therefore, if you use the `--do-not-symlink` flag without adding the `--place-directly` flag, your add-on cannot be enabled automatically.
 	3. By necessity, the generator will use **npm** to install and build your add-on's dependencies before enabling it (you can also use **yarn**). If this process fails, your add-on cannot be enabled. Ensure that the build process was successful; if not, you can look at performing these steps manually (listed below).
 	4. If Local is already running when you create your add-on, you will need to restart Local to see your add-on appear.
 
 #### Local Add-on Directory
-Add-on directories must be placed or linked into the Local add-ons directory to appear within the Local appplication. The generator will create a symlink in the Local add-ons directory pointing to your add-on by default; if you skip this step, you will need to link the directory manually.
+Add-on directories must be placed or linked into the Local add-ons directory to appear within the Local application. The generator will create a symlink in the Local add-ons directory pointing to your add-on by default; if you skip this step, you will need to link the directory manually.
 
 **Local add-on directories:**
 
