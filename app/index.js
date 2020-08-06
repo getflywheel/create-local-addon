@@ -1,4 +1,3 @@
-const package = require('./package.json');
 const fs = require('fs-extra');
 const os = require('os');
 const path = require('path');
@@ -31,14 +30,11 @@ const {
 } = require('./styles.js');
 const { help, title, ascii } = require('./constants.js');
 
+const pkg = fs.readJsonSync(path.join(__dirname, '../package.json'));
+
 class LocalAddonGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
-
-        this.insight = new Insight({
-            trackingCode: 'UA-174676965-1', // Google Analytics
-            package
-        });
 
         this.argument('productname', {
             required: false,
@@ -93,6 +89,12 @@ class LocalAddonGenerator extends Generator {
             process.exit(0);  // exit early with no error
         }
 
+        // ANALYTICS: insight with Google Analytics
+        this.insight = new Insight({
+            trackingCode: 'UA-174676965-1',
+            pkg
+        });
+
         // local/system information (will be updated during installation)
         this.localApp = 'Local';
         this.existingAddonNames = new Set();
@@ -118,13 +120,25 @@ class LocalAddonGenerator extends Generator {
         // add-on installation target path
         this.targetDirectoryPath = this.destinationRoot();
     }
+
+    _collectOptions() {
+        return [
+            ...(this.options['beta'] ? ['beta'] : []),
+            ...(this.options['place-directly'] ? ['place directly'] : []),
+            ...(this.options['do-not-symlink'] ? ['do not symlink'] : []),
+            ...(this.options['disable'] ? ['disable'] : []),
+            ...(this.options['verbose'] ? ['verbose'] : []),
+            ...(this.options['show-error-traces'] ? ['show error traces'] : []),
+        ];
+        
+    }
     
     /**
      * Report event for analytics tracking.  
      * 
      * @param {string} eventAction - type of interaction (example: 'startup'), required
-     * @param {string} eventLabel - event category or classifier (example: 'error')
-     * @param {*} eventValue - extra event data to store (example: 'CLI flags: --verbose --beta')
+     * @param {string} eventLabel - event classifier or information (example: 'error' or 'CLI flags: --verbose --beta')
+     * @param {integer} eventValue
      */
     _report(eventAction, eventLabel, eventValue) {
         if(eventAction === undefined) {
@@ -136,8 +150,9 @@ class LocalAddonGenerator extends Generator {
             category: 'LocalAddonGenerator',
             action: eventAction,
             label: eventLabel ? eventLabel : '',
-            value: eventValue ? eventValue : ''
+            value: eventValue
         });
+        // this.insight.track(eventAction, eventLabel, `${eventValue}`);
     }
 
     // PRIVATE FUNCTIONS FOR USER INTERACTION
@@ -189,18 +204,19 @@ class LocalAddonGenerator extends Generator {
      * @param {*} error 
      */
     _error(message, error) {
+        const raw = chalk.reset(message);
+
         // ANALYTICS: report error.
         this._report(
-            'exit',
             'error',
-            message
+            raw
         );
 
         if(this.shouldShowFullErrors && error !== undefined) {
             this.log(error);
         }
         this.log(`\n❌ ${chalk.red('ERROR:')} ${message}`);
-        this.env.error(`create-local-addon error: ${message}`);
+        this.env.error(`create-local-addon error: ${raw}`);
     }
 
     _formatDirectoryName(addonDirectoryName) {
@@ -285,7 +301,7 @@ class LocalAddonGenerator extends Generator {
      * See https://yeoman.io/authoring/running-context.html for more info.
      */
 
-    initializing() {
+    async initializing() {
         // print greeting, instructions, etc
         if(this.shouldBeVerbose) {
             this.log(ascii);
@@ -294,20 +310,24 @@ class LocalAddonGenerator extends Generator {
 
         // ANALYTICS: prompt for permissions.
         if (this.insight.optOut === undefined) {
-            this.insight.askPermission();
+            await new Promise((resolve, reject) => {
+                this.insight.askPermission(
+                    `May ${chalk.cyan('Local Add-on Creator')} anonymously report usage statistics to improve our tool over time? We will not collect any personal information about you or your add-on — only the way you use this tool.`,
+                    resolve
+                );
+            });
         }
 
         // ANALYTICS: report invocation with provided flags. Could give insight into if a certain default is always being overwritten or flag being used.
         this._report(
             'initialization',
-            '', 
-            `beta: ${this.options['beta']}, place-directly: ${this.options['place-directly']}, do-not-symlink: ${this.options['do-not-symlink']}, disable: ${this.options['disable']}, verbose: ${this.options['verbose']}, show-error-traces: ${this.options['show-error-traces']}`
+            `${this._collectOptions().join(', ')}`
         );
 
         this._printOpeningInstructions();
 
         // ANALYTICS: report system info. Could give insight into users (Example: Windows dominant user base?)
-        this._report('systemsCheck', '', `system: ${os.platform()}`)
+        this._report('system check', `${os.platform()}`)
         
         this._info('Checking on your existing Local installations and add-ons...');
 
@@ -461,8 +481,9 @@ class LocalAddonGenerator extends Generator {
                         error
                     );
                 } else { // Non-Windows system symlink failure
+                    this.log(`New add-on directory: ${path.join(this.targetDirectoryPath, this.addonDirectoryName)}`);
                     this._error(
-                        `There was a problem linking your add-on into the Local add-ons directory. The add-on has been created, but may not appear in the Local application until you link and build it yourself. See https://github.com/getflywheel/create-local-addon#buildingenabling-your-add-on-manually for more information.\nNew add-on directory: ${path.join(this.targetDirectoryPath, this.addonDirectoryName)}`,
+                        `There was a problem linking your add-on into the Local add-ons directory. The add-on has been created, but may not appear in the Local application until you link and build it yourself. See https://github.com/getflywheel/create-local-addon#buildingenabling-your-add-on-manually for more information.`,
                         error
                     );
                 }
@@ -502,7 +523,7 @@ class LocalAddonGenerator extends Generator {
         // print next steps, links, etc
         this._printFollowupInstructions();
         // ANALYTICS: report success/failure.
-        this._report('exit', 'success', '');
+        this._report('success');
     }
 }
 
