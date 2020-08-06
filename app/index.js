@@ -209,7 +209,7 @@ class LocalAddonGenerator extends Generator {
         // ANALYTICS: report error.
         this._report(
             'error',
-            raw
+            message
         );
 
         if(this.shouldShowFullErrors && error !== undefined) {
