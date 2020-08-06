@@ -1,3 +1,4 @@
+const package = require('./package.json');
 const fs = require('fs-extra');
 const os = require('os');
 const path = require('path');
@@ -7,6 +8,7 @@ const gunzip = require('gunzip-maybe');
 const tar = require('tar-fs');
 const outdent = require('outdent');
 const Generator = require('yeoman-generator');
+const Insight = require('insight');
 
 const {
     apps,
@@ -32,6 +34,11 @@ const { help, title, ascii } = require('./constants.js');
 class LocalAddonGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
+
+        this.insight = new Insight({
+            trackingCode: 'UA-XXXXXXXX-X', // Google Analytics
+            package
+        });
 
         this.argument('productname', {
             required: false,
@@ -110,9 +117,27 @@ class LocalAddonGenerator extends Generator {
 
         // add-on installation target path
         this.targetDirectoryPath = this.destinationRoot();
+    }
+    
+    /**
+     * Report event for analytics tracking.  
+     * 
+     * @param {string} eventAction - type of interaction (example: 'startup'), required
+     * @param {string} eventLabel - event category or classifier (example: 'error')
+     * @param {*} eventValue - extra event data to store (example: 'CLI flags: --verbose --beta')
+     */
+    _report(eventAction, eventLabel, eventValue) {
+        if(eventAction === undefined) {
+            return;
+        }
 
-        // ANALYTICS: report preferences? Could give insight into if a certain default is always being overwritten or flag being used.
-        // ANALYTICS: report system info? Could give insight into users (Example: Windows dominant user base? -> focus more on symlink alternative.)
+        // Automatically rejects event and does not track if user has opted out.
+        this.insight.trackEvent({
+            category: 'LocalAddonGenerator',
+            action: eventAction,
+            label: eventLabel ? eventLabel : '',
+            value: eventValue ? eventValue : ''
+        });
     }
 
     // PRIVATE FUNCTIONS FOR USER INTERACTION
@@ -165,6 +190,11 @@ class LocalAddonGenerator extends Generator {
      */
     _error(message, error) {
         // ANALYTICS: report error.
+        this._report(
+            'exit',
+            'error',
+            message
+        );
 
         if(this.shouldShowFullErrors && error !== undefined) {
             this.log(error);
@@ -261,11 +291,23 @@ class LocalAddonGenerator extends Generator {
             this.log(ascii);
             this.log(title);
         }
-        // ANALYTICS: prompt for permissions.
 
-        // ANALYTICS: report invocation.
+        // ANALYTICS: prompt for permissions.
+        if (this.insight.optOut === undefined) {
+            this.insight.askPermission();
+        }
+
+        // ANALYTICS: report invocation with provided flags. Could give insight into if a certain default is always being overwritten or flag being used.
+        this._report(
+            'initialization',
+            '', 
+            `beta: ${this.options['beta']}, place-directly: ${this.options['place-directly']}, do-not-symlink: ${this.options['do-not-symlink']}, disable: ${this.options['disable']}, verbose: ${this.options['verbose']}, show-error-traces: ${this.options['show-error-traces']}`
+        );
 
         this._printOpeningInstructions();
+
+        // ANALYTICS: report system info. Could give insight into users (Example: Windows dominant user base?)
+        this._report('systemsCheck', '', `system: ${os.platform()}`)
         
         this._info('Checking on your existing Local installations and add-ons...');
 
@@ -460,6 +502,7 @@ class LocalAddonGenerator extends Generator {
         // print next steps, links, etc
         this._printFollowupInstructions();
         // ANALYTICS: report success/failure.
+        this._report('exit', 'success', '');
     }
 }
 
