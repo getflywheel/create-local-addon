@@ -117,12 +117,7 @@ class LocalAddonGenerator extends Generator {
         this.shouldBeVerbose = this.options['verbose'];
         this.shouldShowFullErrors = this.options['show-error-traces'];
 
-        // add-on installation target path
-        this.targetDirectoryPath = this.destinationRoot();
-    }
-
-    _collectOptions() {
-        return [
+        this.flags = [
             ...(this.options['beta'] ? ['beta'] : []),
             ...(this.options['place-directly'] ? ['place directly'] : []),
             ...(this.options['do-not-symlink'] ? ['do not symlink'] : []),
@@ -130,7 +125,9 @@ class LocalAddonGenerator extends Generator {
             ...(this.options['verbose'] ? ['verbose'] : []),
             ...(this.options['show-error-traces'] ? ['show error traces'] : []),
         ];
-        
+
+        // add-on installation target path
+        this.targetDirectoryPath = this.destinationRoot();
     }
     
     /**
@@ -321,7 +318,7 @@ class LocalAddonGenerator extends Generator {
         // ANALYTICS: report invocation with provided flags. Could give insight into if a certain default is always being overwritten or flag being used.
         this._report(
             'initialization',
-            `${this._collectOptions().join(', ')}`
+            `${this.flags.join(', ')}`
         );
 
         this._printOpeningInstructions();
