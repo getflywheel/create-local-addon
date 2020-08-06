@@ -36,7 +36,7 @@ class LocalAddonGenerator extends Generator {
         super(args, opts);
 
         this.insight = new Insight({
-            trackingCode: 'UA-XXXXXXXX-X', // Google Analytics
+            trackingCode: 'UA-174676965-1', // Google Analytics
             package
         });
 
