@@ -147,7 +147,7 @@ You can compile, watch add-on source files, and trigger recompilation on change:
 
 ```
 cd ~/.../your-new-local-addon  
-npm run build --watch
+npm run build -- --watch
 ```
 
 Or using **yarn**:
