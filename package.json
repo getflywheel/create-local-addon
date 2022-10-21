@@ -31,8 +31,8 @@
     "outdent": "^0.7.1",
     "tar-fs": "^2.1.0",
     "yarn": "^1.22.4",
-    "yeoman-environment": "^2.10.3",
-    "yeoman-generator": "^4.10.1"
+    "yeoman-environment": "^3.5",
+    "yeoman-generator": "^5.7.0"
   },
   "bin": {
     "create-local-addon": "./index.js"
