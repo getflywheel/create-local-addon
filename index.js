@@ -25,4 +25,4 @@ var env = yeoman.createEnv();
 env.register(require.resolve("./app"), "create-local-addon:app");
 
 // Run create-local-addon generator
-env.run(`create-local-addon:app ${args}`, opts, () => {});
+env.run(`create-local-addon:app ${args}`, opts);
