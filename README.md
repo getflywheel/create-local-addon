@@ -165,3 +165,20 @@ yarn build --watch
 * [Building a Local Add-on](https://localwp.com/get-involved/build)
 * [Local Add-on API](https://github.com/getflywheel/local-docs-addon-api)
 * [Submit an Add-on to the Local Marketplace](https://localwp.com/submit-addon)
+
+## Contributing to this repo
+
+To get started on improving this generator, just follow a few steps:
+
+1. Clone this repo to your local machine.
+2. Install this repo's command globally so you can run it within your terminal.
+
+The above steps should look something like this to install the repo in a `~/src` folder:
+
+``` shell
+mkdir -p ~/src && cd ~/src
+git clone git@github.com:getflywheel/create-local-addon.git
+cd create-local-addon
+npm install -g
+```
+
