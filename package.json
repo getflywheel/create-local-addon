@@ -29,7 +29,7 @@
     "insight": "^0.11.1",
     "node-fetch": "^2.6.7",
     "outdent": "^0.8.0",
-    "tar-fs": "^2.1.0",
+    "tar-fs": "^3.0.8",
     "yarn": "^1.22.22",
     "yeoman-environment": "^3.5",
     "yeoman-generator": "^5.7.0"
