@@ -28,7 +28,7 @@
     "gunzip-maybe": "^1.4.2",
     "insight": "^0.11.1",
     "node-fetch": "^2.6.7",
-    "outdent": "^0.7.1",
+    "outdent": "^0.8.0",
     "tar-fs": "^2.1.0",
     "yarn": "^1.22.4",
     "yeoman-environment": "^3.5",
