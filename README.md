@@ -179,6 +179,6 @@ The above steps should look something like this to install the repo in a `~/src`
 mkdir -p ~/src && cd ~/src
 git clone git@github.com:getflywheel/create-local-addon.git
 cd create-local-addon
-npm install -g
+npm install && npm install -g
 ```
 
