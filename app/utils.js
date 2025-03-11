@@ -1,14 +1,14 @@
-const fs = require('fs-extra');
-const os = require('os');
-const path = require('path');
+import fs from 'fs-extra';
+import os from 'os';
+import path from 'path';
 
-const platforms = {
+export const platforms = {
     macOS: 'darwin',
     windows: 'win32',
     linux: 'linux'
 };
 
-const apps = {
+export const apps = {
     local: 'Local',
     localBeta: 'Local Beta'
 };
@@ -18,7 +18,7 @@ const apps = {
  * 
  * @param {string} filePath 
  */
-const removeDirectory = function(filePath) {
+export const removeDirectory = function(filePath) {
     if(!fs.existsSync(filePath))
         return;
     if(fs.lstatSync(filePath).isFile()) {
@@ -41,7 +41,7 @@ const removeDirectory = function(filePath) {
  * 
  * @param {string} localApp - Local or Local Beta
  */
-const getLocalDirectory = function(localApp) {
+export const getLocalDirectory = function(localApp) {
     const platform = os.platform();
     if(platform === platforms.macOS) {
         // EXAMPLE: `/Users/username/Library/Application Support/Local`
@@ -60,7 +60,7 @@ const getLocalDirectory = function(localApp) {
  * 
  * @returns {Set<string>} Local Installations
  */
-const confirmLocalInstallations = function() {
+export const confirmLocalInstallations = function() {
     var localInstallations = new Set();
     if(fs.existsSync(getLocalDirectory(apps.local))) {
         localInstallations.add(apps.local);
@@ -78,15 +78,15 @@ const confirmLocalInstallations = function() {
  * @param {string} localApp - Local or Local Beta
  * @returns {Map<string, string>} Existing Add-on Directories and Product Names
  */
-const confirmExistingLocalAddons = function(localApp) {
+export const confirmExistingLocalAddons = function(localApp) {
     var existingAddons = new Map();
     const localAddonsPath = path.join(getLocalDirectory(localApp), 'addons');
     fs.readdirSync(localAddonsPath).forEach((addonDirectory) => {
         const addonDirectoryPath = path.join(localAddonsPath, addonDirectory);
         if(!addonDirectory.startsWith('.') && fs.lstatSync(addonDirectoryPath).isDirectory()) {
-            const package = path.join(addonDirectoryPath, 'package.json');
-            if(fs.existsSync(package)) {
-                const packageJSON = fs.readJsonSync(package);
+            const packagePath = path.join(addonDirectoryPath, 'package.json');
+            if(fs.existsSync(packagePath)) {
+                const packageJSON = fs.readJsonSync(packagePath);
                 const addonProductName = packageJSON['productName'];
                 existingAddons.set(addonProductName, addonDirectory);
             }
@@ -98,7 +98,7 @@ const confirmExistingLocalAddons = function(localApp) {
 /**
  * @param {string} directoryPath 
  */
-const getDirectoryContents = function(directoryPath) {
+export const getDirectoryContents = function(directoryPath) {
     var contents = new Set();
     fs.readdirSync(directoryPath).forEach((file) => contents.add(file));
     return contents;
@@ -110,7 +110,7 @@ const getDirectoryContents = function(directoryPath) {
  * 
  * @param {string} localApp - Local or Local Beta
  */
-const confirmExistingLocalAddonDirectories = function(localApp) {
+export const confirmExistingLocalAddonDirectories = function(localApp) {
     const localAddonsDirectory = path.join(getLocalDirectory(localApp), 'addons');
     return getDirectoryContents(localAddonsDirectory);
 };
@@ -121,15 +121,15 @@ const confirmExistingLocalAddonDirectories = function(localApp) {
  * 
  * @param {string} localApp - Local or Local Beta
  */
-const confirmExistingLocalAddonNames = function(localApp) {
+export const confirmExistingLocalAddonNames = function(localApp) {
     var existingAddonNames = new Set();
     const localAddonsPath = path.join(getLocalDirectory(localApp), 'addons');
     fs.readdirSync(localAddonsPath).forEach((addonDirectory) => {
         const addonDirectoryPath = path.join(localAddonsPath, addonDirectory);
         if(!addonDirectory.startsWith('.') && fs.lstatSync(addonDirectoryPath).isDirectory()) {
-            const package = path.join(addonDirectoryPath, 'package.json');
-            if(fs.existsSync(package)) {
-                const packageJSON = fs.readJsonSync(package);
+            const packagePath = path.join(addonDirectoryPath, 'package.json');
+            if(fs.existsSync(packagePath)) {
+                const packageJSON = fs.readJsonSync(packagePath);
                 const addonName = packageJSON['productName'];
                 existingAddonNames.add(addonName);
             }
@@ -144,22 +144,9 @@ const confirmExistingLocalAddonNames = function(localApp) {
  * @param {string} localApp - Local or Local Beta
  * @param {string} addonName - add-on name ('name' property in add-on package.json)
  */
-const enableAddon = function(localApp, addonName) {
+export const enableAddon = function(localApp, addonName) {
     const enabledAddonsPath = path.join(getLocalDirectory(localApp), 'enabled-addons.json');
     const enabledAddonsJSON = fs.readJsonSync(enabledAddonsPath);
     enabledAddonsJSON[addonName] = true;
     fs.writeJsonSync(enabledAddonsPath, enabledAddonsJSON);
-};
-
-module.exports = {
-    platforms,
-    apps,
-    removeDirectory,
-    getLocalDirectory,
-    confirmLocalInstallations,
-    confirmExistingLocalAddons,
-    getDirectoryContents,
-    confirmExistingLocalAddonDirectories,
-    confirmExistingLocalAddonNames,
-    enableAddon
 };

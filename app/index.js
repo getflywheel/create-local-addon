@@ -1,15 +1,15 @@
-const fs = require('fs-extra');
-const os = require('os');
-const path = require('path');
-const fetch = require('node-fetch');
-const chalk = require('chalk');
-const gunzip = require('gunzip-maybe');
-const tar = require('tar-fs');
-const outdent = require('outdent');
-const Generator = require('yeoman-generator');
-const Insight = require('insight');
+import fs from 'fs-extra';
+import os from 'os';
+import path from 'path';
+import fetch from 'node-fetch';
+import chalk from 'chalk';
+import gunzip from 'gunzip-maybe';
+import tar from 'tar-fs';
+import outdent from 'outdent';
+import Generator from 'yeoman-generator';
+import Insight from 'insight';
 
-const {
+import {
     apps,
     platforms,
     getLocalDirectory,
@@ -18,8 +18,9 @@ const {
     getDirectoryContents,
     confirmExistingLocalAddonNames,
     enableAddon
-} = require('./utils');
-const {
+} from './utils.js';
+
+import {
     formatLink,
     formatPath,
     formatCommand,
@@ -27,12 +28,14 @@ const {
     formatSectionHeader,
     formatSectionSubheader,
     formatLeadIn
-} = require('./styles.js');
-const { help, title, ascii } = require('./constants.js');
+} from './styles.js';
 
-const pkg = fs.readJsonSync(path.join(__dirname, '../package.json'));
+import { help, title, ascii } from './constants.js';
 
-class LocalAddonGenerator extends Generator {
+import { readFileSync } from 'fs';
+const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+
+export default class LocalAddonGenerator extends Generator {
     constructor(args, opts) {
         super(args, opts);
 
@@ -523,5 +526,3 @@ class LocalAddonGenerator extends Generator {
         this._report('success');
     }
 }
-
-module.exports = LocalAddonGenerator;

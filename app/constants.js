@@ -1,6 +1,6 @@
-const chalk = require('chalk');
+import chalk from 'chalk';
 
-const title = chalk.greenBright(`
+export const title = chalk.greenBright(`
 ██╗      ██████╗  ██████╗ █████╗ ██╗          █████╗ ██████╗ ██████╗        ██████╗ ███╗   ██╗     ██████╗██████╗ ███████╗ █████╗ ████████╗ ██████╗ ██████╗ 
 ██║     ██╔═══██╗██╔════╝██╔══██╗██║         ██╔══██╗██╔══██╗██╔══██╗      ██╔═══██╗████╗  ██║    ██╔════╝██╔══██╗██╔════╝██╔══██╗╚══██╔══╝██╔═══██╗██╔══██╗
 ██║     ██║   ██║██║     ███████║██║         ███████║██║  ██║██║  ██║█████╗██║   ██║██╔██╗ ██║    ██║     ██████╔╝█████╗  ███████║   ██║   ██║   ██║██████╔╝
@@ -8,7 +8,7 @@ const title = chalk.greenBright(`
 ███████╗╚██████╔╝╚██████╗██║  ██║███████╗    ██║  ██║██████╔╝██████╔╝      ╚██████╔╝██║ ╚████║    ╚██████╗██║  ██║███████╗██║  ██║   ██║   ╚██████╔╝██║  ██║
 ╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝╚══════╝    ╚═╝  ╚═╝╚═════╝ ╚═════╝        ╚═════╝ ╚═╝  ╚═══╝     ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝`);
 
-const ascii = chalk.green.bold(`
+export const ascii = chalk.green.bold(`
                                                                                 
                                 ////////////////,                               
                              //////////////////////                             
@@ -44,7 +44,7 @@ const ascii = chalk.green.bold(`
                                                                                 
 `);
 
-const help = `
+export const help = `
 Usage:
     npx create-local-addon [<productname>] [<directoryname>] [options]
 
@@ -66,5 +66,3 @@ Arguments:
 
 You can also consult documentation for more inforamtion: https://github.com/getflywheel/create-local-addon#getting-started
 `
-
-module.exports = { title, ascii, help };
