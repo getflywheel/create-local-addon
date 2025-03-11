@@ -27,7 +27,7 @@
   "dependencies": {
     "fs-extra": "^11.3.0",
     "gunzip-maybe": "^1.4.2",
-    "insight": "^0.11.1",
+    "insight": "^0.12.0",
     "node-fetch": "^2.6.7",
     "outdent": "^0.8.0",
     "tar-fs": "^3.0.8",
