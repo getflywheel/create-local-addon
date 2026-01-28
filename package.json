@@ -32,7 +32,7 @@
     "outdent": "^0.8.0",
     "tar-fs": "^3.0.8",
     "yarn": "^1.22.22",
-    "yeoman-environment": "^4.4.3",
+    "yeoman-environment": "^5.1.2",
     "yeoman-generator": "^7.5.0"
   },
   "bin": {
