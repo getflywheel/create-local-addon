@@ -88,7 +88,7 @@ export default class LocalAddonGenerator extends Generator {
 
         // check for help flag before starting
         if(this.options['help']) {
-            this.log(help);
+            console.log(help);
             process.exit(0);  // exit early with no error
         }
 
